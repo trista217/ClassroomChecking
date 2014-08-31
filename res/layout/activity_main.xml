@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <Button 
+        android:id="@+id/settingBtn" />
+    
+    <DatePicker
+        android:id="@+id/startDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+    <TimePicker
+        android:id="@+id/startTimePicker"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent" />
+
+    <DatePicker
+        android:id="@+id/endDatePicker"
+        android:layout_width="match_parent" />
+
+    <TimePicker
+        android:id="@+id/endTimePicker" />
+    <ListView 
+        android:id="@+id/roomIdList" />
+    <ListView 
+        android:id="@+id/roomType" />
+    <ListView 
+        android:id="@+id/roomSize" />
+    <ListView 
+        android:id="@+id/roomAvailable" />
+    <Button
+        android:id="@+id/searchBtn" />
+    <Button
+        android:id="@+id/resetBtn" />
+    <Button
+        android:id="@+id/historyBtn" />
+</RelativeLayout>
