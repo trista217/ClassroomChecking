@@ -15,13 +15,13 @@ import android.widget.TabHost;
 import android.view.View;
 
 public class Results extends Activity {
-	//本次查询数据
-	private String[] result_clsNo = {"舜德101", "舜德102", "伟伦501"};
+	//鏈鏌ヨ鏁版嵁
+	private String[] result_clsNo = {"鑸滃痉101", "鑸滃痉102", "浼熶鸡501"};
 	private String[] result_date = {"2014/1/1", "2014/1/2", "2014/1/3"};
 	private String[] result_time = {"14:20-16:20", "15:10-16:00", "12:00-18:00"};
 	
-	//历史查询数据
-	private String[] historical_result_clsNo = {"舜德401", "舜德418", "伟伦401"};
+	//鍘嗗彶鏌ヨ鏁版嵁
+	private String[] historical_result_clsNo = {"鑸滃痉401", "鑸滃痉418", "浼熶鸡401"};
 	private String[] historical_result_date = {"2014/3/1", "2014/3/2", "2014/3/3"};
 	private String[] historical_result_time = {"14:00-16:00", "15:10-17:00", "11:00-18:00"};
 	
@@ -33,11 +33,11 @@ public class Results extends Activity {
 		//Tab
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);  
         tabHost.setup();  
-        tabHost.addTab(tabHost.newTabSpec("results").setIndicator("查询结果").setContent(R.id.results));  
+        tabHost.addTab(tabHost.newTabSpec("results").setIndicator("鏌ヨ缁撴灉").setContent(R.id.results));  
   
-        tabHost.addTab(tabHost.newTabSpec("historical_results").setIndicator("历史查询结果").setContent(R.id.historical_results));
+        tabHost.addTab(tabHost.newTabSpec("historical_results").setIndicator("鍘嗗彶鏌ヨ缁撴灉").setContent(R.id.historical_results));
 		
-        //查询结果
+        //鏌ヨ缁撴灉
 		List<Map<String, Object>> resultItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < result_clsNo.length; i++) {
 			Map<String, Object> item = new HashMap<String, Object>();
@@ -53,7 +53,7 @@ public class Results extends Activity {
 		ListView results = (ListView) findViewById(R.id.resultsList);
 		results.setAdapter(eachItem);
 		
-		//历史查询结果
+		//鍘嗗彶鏌ヨ缁撴灉
 		List<Map<String, Object>> historical_resultItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < historical_result_clsNo.length; i++) {
 			Map<String, Object> historical_item = new HashMap<String, Object>();
@@ -69,7 +69,7 @@ public class Results extends Activity {
 		ListView historical_results = (ListView) findViewById(R.id.historical_resultsList);
 		historical_results.setAdapter(historical_eachItem);
 		
-		//单击向详情页跳转
+		//鍗曞嚮鍚戣鎯呴〉璺宠浆
 		results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -79,7 +79,7 @@ public class Results extends Activity {
 			}
 		});
 		
-		//单击向详情页跳转
+		//鍗曞嚮鍚戣鎯呴〉璺宠浆
 		historical_results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

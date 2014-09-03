@@ -1,6 +1,6 @@
 package util;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -11,9 +11,9 @@ public class getFull {
 	private SQLiteDatabase db;
 	private QuerySql sqlquery;
 	
-	public Map<String, ArrayList<String>> getfull(String field,StdDBHelper dbHelper)
+	public Map<String, List<String>> getfull(String field,StdDBHelper dbHelper)
 	{
-		Log.v("getFull","getFull");
+		//Log.v("getFull","getFull");
 		sqlquery=new QuerySql();
 		if (field.equals("NumRange"))
 			return sqlquery.sqlQuery("Select DISTINCT "+field+" from "+DATABASE_NAME+" ORDER BY num",dbHelper);

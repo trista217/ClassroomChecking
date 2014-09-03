@@ -18,18 +18,18 @@ public class ClsSpec extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.clsspec);
 		
-		//Êı¾İ
-		String classroomNoText = new String("Ë´µÂ101");
-		String classroomTypeText = new String("ÌÖÂÛ¼ä");
+		//æ•°æ®
+		String classroomNoText = new String("èˆœå¾·101");
+		String classroomTypeText = new String("è®¨è®ºé—´");
 		String classroomNoOfPeopleText = new String("13");
-		String classroomStatusText = new String("Õ¼ÓÃ");
-		String[] spec_person = {"çùÃÃ", "ÖíÍ·", "Ñô¸ç"};
-		String[] spec_school = {"¹Ü¿Æ", "½ğÈÚ", "»á¼Æ"};
+		String classroomStatusText = new String("å ç”¨");
+		String[] spec_person = {"ç¦å¦¹", "çŒªå¤´", "é˜³å“¥"};
+		String[] spec_school = {"ç®¡ç§‘", "é‡‘è", "ä¼šè®¡"};
 		String[] spec_date = {"2014/1/1", "2014/1/2", "2014/1/3"};
 		String[] spec_time = {"14:20-16:20", "15:10-16:00", "12:00-18:00"};
-		String[] spec_usage = {"°à»á", "½²×ù", "ÉÏ¿Î"};
+		String[] spec_usage = {"ç­ä¼š", "è®²åº§", "ä¸Šè¯¾"};
 		
-		//½èÓÃĞÅÏ¢
+		//å€Ÿç”¨ä¿¡æ¯
 		TextView classroomNo = (TextView) findViewById(R.id.spec_classroomno);
 		classroomNo.setText(classroomNoText);
 		TextView classroomType = (TextView) findViewById(R.id.spec_classroomtype);
@@ -39,7 +39,7 @@ public class ClsSpec extends Activity {
 		TextView classroomStatus = (TextView) findViewById(R.id.spec_classroomstatus);
 		classroomStatus.setText(classroomStatusText);
 		
-		//½èÓÃÕßĞÅÏ¢
+		//å€Ÿç”¨è€…ä¿¡æ¯
 		List<Map<String, Object>> specItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < spec_person.length; i++) {
 			Map<String, Object> item = new HashMap<String, Object>();

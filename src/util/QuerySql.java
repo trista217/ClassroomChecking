@@ -1,32 +1,31 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class QuerySql {
 	private SQLiteDatabase db;
 	private StdDBHelper dbHelper;
 
-	public Map<String, ArrayList<String>> sqlQuery(String sql,StdDBHelper dbHelper) {
+	public Map<String, List<String>> sqlQuery(String sql,StdDBHelper dbHelper) {
 		// TODO Auto-generated method stub
 		String[] colNames;
-		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-        //¥Úø™ ˝æ›ø‚
-		Log.v("sqlQuery","sqlQuery");
+		Map<String, List<String>> map = new LinkedHashMap<String, List<String>>();
+        // Êï∞ÊçÆÂ∫ì
+		//Log.v("sqlQuery","sqlQuery");
     	db=dbHelper.getWritableDatabase();
-		Log.v("before sql query", "*************");
+		//Log.v("before sql query", "*************");
 		Cursor c=db.rawQuery(sql, null);
 		colNames=c.getColumnNames();
-		Log.v("after sql", colNames.toString());
+		//Log.v("after sql", colNames.toString());
 		for(int i=0;i<colNames.length;i++)
 		{
-			c.moveToFirst();//µ⁄“ªÃı
+			c.moveToFirst();//Âà∞Á¨¨‰∏ÄË°å
 			ArrayList<String> fieldsValue=new ArrayList<String>();
 			for(int j=0;j<c.getCount();j++)
 			{
@@ -35,7 +34,7 @@ public class QuerySql {
 			}
 			map.put(colNames[i], fieldsValue);
 		}
-		Log.v("sql query finished", "finished");
+		//Log.v("sql query finished", "finished");
 		return map;
     }
 }

@@ -29,7 +29,7 @@ public class MySpinner extends Button {
 	}
 	@Override
 	public void setText(CharSequence text, BufferType type) {
-		super.setText(text+"    ®ã", type);
+		super.setText(text+"    ‚ñº", type);
 	}
 	public void initContent(final String[] m) {
 		setText(m[0], null);
@@ -38,7 +38,7 @@ public class MySpinner extends Button {
 			public void onClick(View v) {
 				final SpinnerDialog dialog=new SpinnerDialog(getContext());
 				TextView textView=(TextView) dialog.findViewById(R.id.over_text);
-				textView.setText("ÕÍ≥…");
+				textView.setText("ÂÆåÊàê");
 				textView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {

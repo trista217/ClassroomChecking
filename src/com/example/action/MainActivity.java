@@ -1,19 +1,26 @@
 package com.example.action;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import service_impl.getByThreeLimit;
+import util.StdDBHelper;
+import util.getFull;
 import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -34,18 +41,23 @@ public class MainActivity extends Activity {
 	private ArrayAdapter<String> classroomnoofpeopleadapter;
 	private Spinner classroomstatusspinner;
 	private ArrayAdapter<String> classroomstatusadapter;
-	// ÓÃÀ´±£´æÄêÔÂÈÕ£º
+	// ç”¨æ¥ä¿å­˜å¹´æœˆæ—¥ï¼š
 	private int startYear, endYear;
 	private int startMonth, endMonth;
 	private int startDay, endDay;
 	private int startHour, endHour;
 	private int startMin, endMin;
-	// ÉùÃ÷Ò»¸ö¶ÀÒ»ÎŞ¶şµÄ±êÊ¶£¬À´×÷ÎªÒªÏÔÊ¾DatePickerºÍTimePickerµÄDialogµÄID£º
+	// å£°æ˜ä¸€ä¸ªç‹¬ä¸€æ— äºŒçš„æ ‡è¯†ï¼Œæ¥ä½œä¸ºè¦æ˜¾ç¤ºDatePickerå’ŒTimePickerçš„Dialogçš„IDï¼š
 	static final int START_DATE_DIALOG_ID = 0;
 	static final int END_DATE_DIALOG_ID = 1;
 	static final int START_TIME_DIALOG_ID = 2;
 	static final int END_TIME_DIALOG_ID = 3;
 
+	//æ•°æ®åº“ç›¸å…³
+	private static final String DATABASE_NAME="classroom";
+	private SQLiteDatabase db;
+	private StdDBHelper dbHelper;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,14 +70,14 @@ public class MainActivity extends Activity {
 		enddate = (EditText) findViewById(R.id.enddateDisplay);
 		starttime = (EditText) findViewById(R.id.starttimeDisplay);
 		endtime = (EditText) findViewById(R.id.endtimeDisplay);
-		// ¸øEditTextÌí¼ÓÊÂ¼ş¼àÌıÆ÷£º
+		// ç»™EditTextæ·»åŠ äº‹ä»¶ç›‘å¬å™¨ï¼š
 		startdate.setOnClickListener(new OnClickListener() {
 
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// µ÷ÓÃActivityÀàµÄ·½·¨À´ÏÔÊ¾Dialog:µ÷ÓÃÕâ¸ö·½·¨»áÔÊĞíActivity¹ÜÀí¸ÃDialogµÄÉúÃüÖÜÆÚ£¬
-				// ²¢»áµ÷ÓÃ onCreateDialog(int)»Øµ÷º¯ÊıÀ´ÇëÇóÒ»¸öDialog
+				// è°ƒç”¨Activityç±»çš„æ–¹æ³•æ¥æ˜¾ç¤ºDialog:è°ƒç”¨è¿™ä¸ªæ–¹æ³•ä¼šå…è®¸Activityç®¡ç†è¯¥Dialogçš„ç”Ÿå‘½å‘¨æœŸï¼Œ
+				// å¹¶ä¼šè°ƒç”¨ onCreateDialog(int)å›è°ƒå‡½æ•°æ¥è¯·æ±‚ä¸€ä¸ªDialog
 				showDialog(START_DATE_DIALOG_ID);
 			}
 		});
@@ -74,8 +86,8 @@ public class MainActivity extends Activity {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// µ÷ÓÃActivityÀàµÄ·½·¨À´ÏÔÊ¾Dialog:µ÷ÓÃÕâ¸ö·½·¨»áÔÊĞíActivity¹ÜÀí¸ÃDialogµÄÉúÃüÖÜÆÚ£¬
-				// ²¢»áµ÷ÓÃ onCreateDialog(int)»Øµ÷º¯ÊıÀ´ÇëÇóÒ»¸öDialog
+				// è°ƒç”¨Activityç±»çš„æ–¹æ³•æ¥æ˜¾ç¤ºDialog:è°ƒç”¨è¿™ä¸ªæ–¹æ³•ä¼šå…è®¸Activityç®¡ç†è¯¥Dialogçš„ç”Ÿå‘½å‘¨æœŸï¼Œ
+				// å¹¶ä¼šè°ƒç”¨ onCreateDialog(int)å›è°ƒå‡½æ•°æ¥è¯·æ±‚ä¸€ä¸ªDialog
 				showDialog(END_DATE_DIALOG_ID);
 			}
 		});
@@ -84,8 +96,8 @@ public class MainActivity extends Activity {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// µ÷ÓÃActivityÀàµÄ·½·¨À´ÏÔÊ¾Dialog:µ÷ÓÃÕâ¸ö·½·¨»áÔÊĞíActivity¹ÜÀí¸ÃDialogµÄÉúÃüÖÜÆÚ£¬
-				// ²¢»áµ÷ÓÃ onCreateDialog(int)»Øµ÷º¯ÊıÀ´ÇëÇóÒ»¸öDialog
+				// è°ƒç”¨Activityç±»çš„æ–¹æ³•æ¥æ˜¾ç¤ºDialog:è°ƒç”¨è¿™ä¸ªæ–¹æ³•ä¼šå…è®¸Activityç®¡ç†è¯¥Dialogçš„ç”Ÿå‘½å‘¨æœŸï¼Œ
+				// å¹¶ä¼šè°ƒç”¨ onCreateDialog(int)å›è°ƒå‡½æ•°æ¥è¯·æ±‚ä¸€ä¸ªDialog
 				showDialog(START_TIME_DIALOG_ID);
 			}
 		});
@@ -94,61 +106,99 @@ public class MainActivity extends Activity {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
-				// µ÷ÓÃActivityÀàµÄ·½·¨À´ÏÔÊ¾Dialog:µ÷ÓÃÕâ¸ö·½·¨»áÔÊĞíActivity¹ÜÀí¸ÃDialogµÄÉúÃüÖÜÆÚ£¬
-				// ²¢»áµ÷ÓÃ onCreateDialog(int)»Øµ÷º¯ÊıÀ´ÇëÇóÒ»¸öDialog
+				// è°ƒç”¨Activityç±»çš„æ–¹æ³•æ¥æ˜¾ç¤ºDialog:è°ƒç”¨è¿™ä¸ªæ–¹æ³•ä¼šå…è®¸Activityç®¡ç†è¯¥Dialogçš„ç”Ÿå‘½å‘¨æœŸï¼Œ
+				// å¹¶ä¼šè°ƒç”¨ onCreateDialog(int)å›è°ƒå‡½æ•°æ¥è¯·æ±‚ä¸€ä¸ªDialog
 				showDialog(END_TIME_DIALOG_ID);
 			}
 		});
-		// »ñµÃµ±Ç°µÄÈÕÆÚºÍÊ±¼ä£º
+		// è·å¾—å½“å‰çš„æ—¥æœŸå’Œæ—¶é—´ï¼š
 		final Calendar currentDate = Calendar.getInstance();
 		startYear = endYear = currentDate.get(Calendar.YEAR);
 		startMonth = endMonth = currentDate.get(Calendar.MONTH);
 		startDay = endDay = currentDate.get(Calendar.DAY_OF_MONTH);
 		startHour = endHour = currentDate.get(Calendar.HOUR_OF_DAY);
 		startMin = endMin = currentDate.get(Calendar.MINUTE);
-		// ÉèÖÃÎÄ±¾µÄÄÚÈİ£º
-		startdate.setText(new StringBuilder().append(startYear).append("Äê")
-				.append(startMonth + 1).append("ÔÂ")// µÃµ½µÄÔÂ·İ+1£¬ÒòÎª´Ó0¿ªÊ¼
-				.append(startDay).append("ÈÕ"));
-		enddate.setText(new StringBuilder().append(endYear).append("Äê")
-				.append(endMonth + 1).append("ÔÂ")// µÃµ½µÄÔÂ·İ+1£¬ÒòÎª´Ó0¿ªÊ¼
-				.append(endDay).append("ÈÕ"));
+		// è®¾ç½®æ–‡æœ¬çš„å†…å®¹ï¼š
+		startdate.setText(new StringBuilder().append(startYear).append("å¹´")
+				.append(startMonth + 1).append("æœˆ")// å¾—åˆ°çš„æœˆä»½+1ï¼Œå› ä¸ºä»0å¼€å§‹
+				.append(startDay).append("æ—¥"));
+		enddate.setText(new StringBuilder().append(endYear).append("å¹´")
+				.append(endMonth + 1).append("æœˆ")// å¾—åˆ°çš„æœˆä»½+1ï¼Œå› ä¸ºä»0å¼€å§‹
+				.append(endDay).append("æ—¥"));
 		starttime.setText(new StringBuilder().append(pad(startHour))
 				.append(":").append(pad(startMin)));
 		endtime.setText(new StringBuilder().append(pad(endHour)).append(":")
 				.append(pad(endMin)));
 		
-		// ´´½¨Ñ¡Ôñ½ÌÊÒºÅµÄMySpinner
-		// ¿ÉÒÔ¸ù¾İservice²ãÊı¾İ´¦ÀíÊµÏÖ¸ù¾İÒÑÑ¡Ôñ½ÌÊÒÀàĞÍ×Ô¶¯É¸Ñ¡¹ıÂË½ÌÊÒºÅ£¬ÕâÀïµÄclassroomnoarrayÖ»ÊÇ²âÊÔÊı¾İ¼¯
-		final String[] classroomnoarray ={"Ë´µÂ101", "Î°Â×101", "Ë´µÂ102", "ÆäËû"};
-		MySpinner classroomNoMySpinner=(MySpinner) findViewById(R.id.classroomnospinner);
-		classroomNoMySpinner.initContent(classroomnoarray);
-
-		// ´´½¨Ñ¡Ôñ½ÌÊÒÈËÊıµÄMySpinner
-		// ¿ÉÒÔ¸ù¾İservice²ãÊı¾İ´¦ÀíÊµÏÖ¸ù¾İÒÑÑ¡ÔñÆäËû²ÎÊı×Ô¶¯É¸Ñ¡¹ıÂË£¬ÕâÀïµÄclassroomnoofpeoplearrayÖ»ÊÇ²âÊÔÊı¾İ¼¯
-		final String[] classroomnoofpeoplearray ={"1-10", "11-20", "21-30" };
-		MySpinner classroomNoOfPeopleMySpinner=(MySpinner) findViewById(R.id.classroomnoofpeoplespinner);
-		classroomNoOfPeopleMySpinner.initContent(classroomnoofpeoplearray);
+		//æŸ¥è¯¢
+		//åˆ›å»ºæ•°æ®åº“
+		dbHelper =new StdDBHelper(this);
+			
+		//åˆ›å»ºå…¨æŸ¥è¯¢
+		getFull getfull = new getFull();
 		
-		// ´´½¨Ñ¡Ôñ½ÌÊÒÀàĞÍµÄMySpinner
-		// ¿ÉÒÔ¸ù¾İservice²ãÊı¾İ´¦ÀíÊµÏÖ¸ù¾İÒÑÑ¡ÔñÆäËû²ÎÊı×Ô¶¯É¸Ñ¡¹ıÂË£¬ÕâÀïµÄclassroomtypearrayÖ»ÊÇ²âÊÔÊı¾İ¼¯
-		final String[] classroomtypearray = { "½ÌÊÒ", "ÌÖÂÛÊÒ", "±¨¸æÌü" };
-		MySpinner classroomTypeMySpinner=(MySpinner) findViewById(R.id.classroomtypespinner);
-		classroomTypeMySpinner.initContent(classroomtypearray);
+		//è·å¾—æ•™å®¤å·å­—æ®µ
+		String field="ClassroomName";
+		String[] classroomnoarray =new String[getfull.getfull(field, dbHelper).get(field).size()];
+		List<String> classroomList=getfull.getfull(field, dbHelper).get(field);
+		classroomnoarray=classroomList.toArray(new String[0]);
+		String[] roomName={classroomnoarray[0],classroomnoarray[35],classroomnoarray[50],classroomnoarray[63]};
+		// åˆ›å»ºé€‰æ‹©æ•™å®¤å·çš„MySpinner
+		// å¯ä»¥æ ¹æ®serviceå±‚æ•°æ®å¤„ç†å®ç°æ ¹æ®å·²é€‰æ‹©æ•™å®¤ç±»å‹è‡ªåŠ¨ç­›é€‰è¿‡æ»¤æ•™å®¤å·ï¼Œè¿™é‡Œçš„classroomnoarrayåªæ˜¯æµ‹è¯•æ•°æ®é›†
+		
+		MySpinner classroomNoMySpinner=(MySpinner) findViewById(R.id.classroomnospinner);
+		classroomNoMySpinner.initContent(roomName);
 
-		// ´´½¨Ñ¡Ôñ½ÌÊÒ×´Ì¬µÄSpinner
+		//
+		field="NumRange";
+		String[] classroomnoofpeoplearray =new String[getfull.getfull(field, dbHelper).get(field).size()];
+		List<String> NumList=getfull.getfull(field, dbHelper).get(field);
+		classroomnoofpeoplearray=NumList.toArray(new String[0]);
+		String[] numRange={classroomnoofpeoplearray[0],classroomnoofpeoplearray[1],classroomnoofpeoplearray[2],classroomnoofpeoplearray[3]};
+		// åˆ›å»ºé€‰æ‹©æ•™å®¤äººæ•°çš„MySpinner
+		// å¯ä»¥æ ¹æ®serviceå±‚æ•°æ®å¤„ç†å®ç°æ ¹æ®å·²é€‰æ‹©å…¶ä»–å‚æ•°è‡ªåŠ¨ç­›é€‰è¿‡æ»¤ï¼Œè¿™é‡Œçš„classroomnoofpeoplearrayåªæ˜¯æµ‹è¯•æ•°æ®é›†
+
+		MySpinner classroomNoOfPeopleMySpinner=(MySpinner) findViewById(R.id.classroomnoofpeoplespinner);
+		classroomNoOfPeopleMySpinner.initContent(numRange);
+
+		//
+		//æŸ¥è¯¢æ•™å®¤ç±»å‹
+		field="type";
+		String[] classroomtypearray =new String[getfull.getfull(field, dbHelper).get(field).size()];
+		List<String> TypeList=getfull.getfull(field, dbHelper).get(field);
+		classroomtypearray=TypeList.toArray(new String[0]);
+		String[] type={classroomtypearray[0],classroomtypearray[1],classroomtypearray[2],classroomtypearray[3],classroomtypearray[4],classroomtypearray[5],classroomtypearray[6],classroomtypearray[7],classroomtypearray[8],classroomtypearray[9],classroomtypearray[10],classroomtypearray[11]};
+		// åˆ›å»ºé€‰æ‹©æ•™å®¤ç±»å‹çš„MySpinner
+		// å¯ä»¥æ ¹æ®serviceå±‚æ•°æ®å¤„ç†å®ç°æ ¹æ®å·²é€‰æ‹©å…¶ä»–å‚æ•°è‡ªåŠ¨ç­›é€‰è¿‡æ»¤ï¼Œè¿™é‡Œçš„classroomtypearrayåªæ˜¯æµ‹è¯•æ•°æ®é›†
+
+		MySpinner classroomTypeMySpinner=(MySpinner) findViewById(R.id.classroomtypespinner);
+		classroomTypeMySpinner.initContent(type);
+
+		//æŸ¥è©¢
+		//æ‰“Map
+		Map<String, List<String>> threemap=new LinkedHashMap<String, List<String>>();
+
+		threemap.put("ClassroomName", Arrays.asList(roomName));
+		threemap.put("NumRange", Arrays.asList(numRange));
+		threemap.put("type", Arrays.asList(type));
+		getByThreeLimit threeQuery=new getByThreeLimit();
+		Log.v("Here","Before");
+		threeQuery.getbythreelimit(threemap, dbHelper);
+		Log.v("Here","after");
+		
+		// åˆ›å»ºé€‰æ‹©æ•™å®¤çŠ¶æ€çš„Spinner
 		classroomstatusspinner = (Spinner) findViewById(R.id.classroomstatusspinner);
 		// classroomstatusarray
-		// Ó¦¸ÃÒ²ĞèÒª¸ù¾İÆäËû²ÎÊıµÄÑ¡ÔñÇé¿ö×Ô¶¯¹ıÂË
-		String[] classroomstatusarray = { "¿ÕÏĞ", "Õ¼ÓÃ" };
+		// åº”è¯¥ä¹Ÿéœ€è¦æ ¹æ®å…¶ä»–å‚æ•°çš„é€‰æ‹©æƒ…å†µè‡ªåŠ¨è¿‡æ»¤
+		String[] classroomstatusarray = { "ç©ºé—²", "å ç”¨" };
 		classroomstatusadapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, classroomstatusarray);
-		// ÉèÖÃÑùÊ½
+		// è®¾ç½®æ ·å¼
 		classroomstatusadapter
 				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		classroomstatusspinner.setAdapter(classroomstatusadapter);
 		
-		//µã»÷¡°ËÑË÷¡±×ªµ½½á¹ûÒ³£¬Ó¦¸ÃÎªµã»÷ËÑË÷ÏòºóÌ¨´«Öµ£¬Ö®ºóÔÙĞŞ¸Ä°É
+		//ç‚¹å‡»â€œæœç´¢â€è½¬åˆ°ç»“æœé¡µï¼Œåº”è¯¥ä¸ºç‚¹å‡»æœç´¢å‘åå°ä¼ å€¼ï¼Œä¹‹åå†ä¿®æ”¹å§
 		Button search = (Button) findViewById(R.id.searchbtn);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -158,7 +208,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		//µã»÷¡°ÀúÊ·²éÑ¯¡±×ªµ½ÀúÊ·²éÑ¯Ò³£¬Ó¦¸ÃÎªµã»÷ËÑË÷ÏòºóÌ¨´«Öµ£¬Ö®ºóÔÙĞŞ¸Ä°É;¶øÇÒÕâÀï»¹Ã»ÊµÏÖµ÷µ½ÀúÊ·½á¹ûÄÇ¸ötab£¬½¨ÒéÉ¾ÁËÕâ¸öButton
+		//ç‚¹å‡»â€œå†å²æŸ¥è¯¢â€è½¬åˆ°å†å²æŸ¥è¯¢é¡µï¼Œåº”è¯¥ä¸ºç‚¹å‡»æœç´¢å‘åå°ä¼ å€¼ï¼Œä¹‹åå†ä¿®æ”¹å§;è€Œä¸”è¿™é‡Œè¿˜æ²¡å®ç°è°ƒåˆ°å†å²ç»“æœé‚£ä¸ªtabï¼Œå»ºè®®åˆ äº†è¿™ä¸ªButton
 		Button historical_search = (Button) findViewById(R.id.hissearchbtn);
 		historical_search.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -177,17 +227,17 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	// ĞèÒª¶¨Òåµ¯³öµÄDatePicker¶Ô»°¿òµÄÊÂ¼ş¼àÌıÆ÷£º
+	// éœ€è¦å®šä¹‰å¼¹å‡ºçš„DatePickerå¯¹è¯æ¡†çš„äº‹ä»¶ç›‘å¬å™¨ï¼š
 	private DatePickerDialog.OnDateSetListener startDateSetListener = new OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			startYear = year;
 			startMonth = monthOfYear;
 			startDay = dayOfMonth;
-			// ÉèÖÃÎÄ±¾µÄÄÚÈİ£º
-			startdate.setText(new StringBuilder().append(startYear).append("Äê")
-					.append(startMonth + 1).append("ÔÂ")// µÃµ½µÄÔÂ·İ+1£¬ÒòÎª´Ó0¿ªÊ¼
-					.append(startDay).append("ÈÕ"));
+			// è®¾ç½®æ–‡æœ¬çš„å†…å®¹ï¼š
+			startdate.setText(new StringBuilder().append(startYear).append("å¹´")
+					.append(startMonth + 1).append("æœˆ")// å¾—åˆ°çš„æœˆä»½+1ï¼Œå› ä¸ºä»0å¼€å§‹
+					.append(startDay).append("æ—¥"));
 		}
 	};
 	private DatePickerDialog.OnDateSetListener endDateSetListener = new OnDateSetListener() {
@@ -196,15 +246,15 @@ public class MainActivity extends Activity {
 			endYear = year;
 			endMonth = monthOfYear;
 			endDay = dayOfMonth;
-			// ÉèÖÃÎÄ±¾µÄÄÚÈİ£º
-			enddate.setText(new StringBuilder().append(endYear).append("Äê")
-					.append(endMonth + 1).append("ÔÂ")// µÃµ½µÄÔÂ·İ+1£¬ÒòÎª´Ó0¿ªÊ¼
-					.append(endDay).append("ÈÕ"));
+			// è®¾ç½®æ–‡æœ¬çš„å†…å®¹ï¼š
+			enddate.setText(new StringBuilder().append(endYear).append("å¹´")
+					.append(endMonth + 1).append("æœˆ")// å¾—åˆ°çš„æœˆä»½+1ï¼Œå› ä¸ºä»0å¼€å§‹
+					.append(endDay).append("æ—¥"));
 		}
 	};
 
 	/**
-	 * µ±Activityµ÷ÓÃshowDialogº¯ÊıÊ±»á´¥·¢¸Ãº¯ÊıµÄµ÷ÓÃ£º
+	 * å½“Activityè°ƒç”¨showDialogå‡½æ•°æ—¶ä¼šè§¦å‘è¯¥å‡½æ•°çš„è°ƒç”¨ï¼š
 	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
