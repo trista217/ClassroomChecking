@@ -1,41 +1,157 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" 
+    android:columnCount="2">
     
-    <Button 
-        android:id="@+id/settingBtn" />
-    
-    <DatePicker
-        android:id="@+id/startDatePicker"
+    <TextView
+        android:id="@+id/startdate"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-
-    <TimePicker
-        android:id="@+id/startTimePicker"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent" />
+        android:layout_row="0"
+        android:layout_column="0"
+        android:text="@string/startdate" />
+    
+    <EditText
+        android:id="@+id/startdateDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:cursorVisible="false"
+        android:editable="false" />
+    
+    <TextView
+        android:id="@+id/enddate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:text="@string/enddate" />
 
-    <DatePicker
-        android:id="@+id/endDatePicker"
-        android:layout_width="match_parent" />
+    <EditText
+        android:id="@+id/enddateDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:cursorVisible="false"
+        android:editable="false" />
+    
+    <TextView
+        android:id="@+id/starttime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="2"
+        android:layout_column="0"
+        android:text="@string/starttime" />
 
-    <TimePicker
-        android:id="@+id/endTimePicker" />
-    <ListView 
-        android:id="@+id/roomIdList" />
-    <ListView 
-        android:id="@+id/roomType" />
-    <ListView 
-        android:id="@+id/roomSize" />
-    <ListView 
-        android:id="@+id/roomAvailable" />
+    <EditText
+        android:id="@+id/starttimeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:cursorVisible="false"
+        android:editable="false" />
+    
+	<TextView
+        android:id="@+id/endtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="3"
+        android:layout_column="0"
+        android:text="@string/endtime" />
+
+    <EditText
+        android:id="@+id/endtimeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="3"
+        android:layout_column="1"
+        android:cursorVisible="false"
+        android:editable="false" />
+    
+    <TextView
+        android:id="@+id/classroomno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="4"
+        android:layout_column="0"
+        android:text="@string/classroomno" />
+
+    <com.example.action.MySpinner
+		android:id="@+id/classroomnospinner"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_row="4"
+        android:layout_column="1"
+		android:textSize="14sp"/>
+    
+    <TextView
+        android:id="@+id/classroomtype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:text="@string/classroomtype" />
+
+    <com.example.action.MySpinner
+		android:id="@+id/classroomtypespinner"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_row="5"
+        android:layout_column="1"
+		android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/classroomnoofpeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="6"
+        android:layout_column="0"
+        android:text="@string/classroomnoofpeople" />
+    
+	<com.example.action.MySpinner
+		android:id="@+id/classroomnoofpeoplespinner"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_row="6"
+        android:layout_column="1"
+		android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/classroomstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="7"
+        android:layout_column="0"
+        android:text="@string/classroomstatus" />
+
+    <Spinner
+        android:id="@+id/classroomstatusspinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="7"
+        android:layout_column="1"
+        android:prompt="@string/classroomstatustip" />
+
     <Button
-        android:id="@+id/searchBtn" />
+        android:id="@+id/searchbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="8"
+        android:layout_columnSpan="2"
+        android:text="@string/search" >
+    </Button>
+
     <Button
-        android:id="@+id/resetBtn" />
-    <Button
-        android:id="@+id/historyBtn" />
-</RelativeLayout>
+        android:id="@+id/hissearchbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="9"
+        android:layout_columnSpan="2"
+        android:text="@string/hissearch" >
+    </Button>
+    
+
+</GridLayout>

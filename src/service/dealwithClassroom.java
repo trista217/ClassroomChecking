@@ -1,10 +1,10 @@
 package service;
 
-import domain.classroom;
+import domain.query;
 
 public class dealwithClassroom {
 
-	public boolean DealwithClassroom(classroom clazzroom)
+	public boolean DealwithClassroom(query clazzroom)
 	{
 		return true;
 	}
