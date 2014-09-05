@@ -22,8 +22,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Results"/>
-        <activity android:name=".ClsSpec"/>
+                <activity
+            android:name=".Results"
+            android:theme="@android:style/Theme.Holo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.action.MainActivity" />
+        </activity>
+         <activity
+            android:name=".ClsSpec"
+            android:theme="@android:style/Theme.Holo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.action.Results" />
+        </activity>
+        <activity
+            android:name=".MultiSpinnerActivity"
+            android:theme="@style/MyDialogStyle" />
     </application>
 
 </manifest>

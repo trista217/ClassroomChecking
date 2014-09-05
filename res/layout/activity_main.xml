@@ -79,8 +79,9 @@
         android:layout_column="0"
         android:text="@string/classroomno" />
 
-    <com.example.action.MySpinner
-		android:id="@+id/classroomnospinner"
+    
+    <Button
+		android:id="@+id/classroomnobtn"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:layout_row="4"
@@ -95,8 +96,8 @@
         android:layout_column="0"
         android:text="@string/classroomtype" />
 
-    <com.example.action.MySpinner
-		android:id="@+id/classroomtypespinner"
+    <Button
+		android:id="@+id/classroomtypebtn"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:layout_row="5"
@@ -111,8 +112,8 @@
         android:layout_column="0"
         android:text="@string/classroomnoofpeople" />
     
-	<com.example.action.MySpinner
-		android:id="@+id/classroomnoofpeoplespinner"
+	<Button
+		android:id="@+id/classroomnoofpeoplebtn"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:layout_row="6"
@@ -129,7 +130,7 @@
 
     <Spinner
         android:id="@+id/classroomstatusspinner"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="7"
         android:layout_column="1"

@@ -1,33 +1,33 @@
 package domain;
 
+import java.util.ArrayList;
+
 public class query {
 
 	private String startDate;
 	private String endDate;
 	private String startTime;
 	private String endTime;
-	private String roomNum;
-	private String type;
-	private int number;
+	private ArrayList<String> room;
 	private boolean IsAvaliable;
 	
 	public query() {
 		super();
 	}
 
+	
 	public query(String startDate, String endDate, String startTime,
-			String endTime, String roomNum, String type, int number,
-			boolean isAvaliable) {
+			String endTime, ArrayList<String> room, boolean isAvaliable) {
 		super();
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.roomNum = roomNum;
-		this.type = type;
-		this.number = number;
+		this.room = room;
 		IsAvaliable = isAvaliable;
 	}
+
+
 
 	public String getStartDate() {
 		return startDate;
@@ -61,28 +61,12 @@ public class query {
 		this.endTime = endTime;
 	}
 
-	public String getRoomNum() {
-		return roomNum;
+	public ArrayList<String> getRoom() {
+		return room;
 	}
 
-	public void setRoomNum(String roomNum) {
-		this.roomNum = roomNum;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getNumber() {
-		return number;
-	}
-
-	public void setNumber(int number) {
-		this.number = number;
+	public void setRoom(ArrayList<String> room) {
+		this.room = room;
 	}
 
 	public boolean isIsAvaliable() {
@@ -92,5 +76,6 @@ public class query {
 	public void setIsAvaliable(boolean isAvaliable) {
 		IsAvaliable = isAvaliable;
 	}
+
 	
 }

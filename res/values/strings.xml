@@ -3,7 +3,7 @@
 
     <string name="app_name">CSApp</string>
     <string name="hello_world">Hello world!</string>
-	<string name="action_settings">Settings</string>
+    <string name="action_settings">Settings</string>
     <string name="changedatebutton">change date</string>
     <string name="title_activity_pickertest">Pickertest</string>
     <string name="startdate">起始日期：</string>
@@ -30,5 +30,7 @@
     <string name="usage">用途：</string>
     <string name="available_results">查询结果如下：</string>
     <string name="historical_results">历史查询结果如下：</string>
-    
+    <string name="title_activity_cls_spec">ClsSpec</string>
+    <string name="action_share">分享到微信</string>
+
 </resources>

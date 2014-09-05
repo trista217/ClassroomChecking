@@ -1077,7 +1077,8 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_launcher=0x7f020057;
+        public static final int ic_action_share=0x7f020057;
+        public static final int ic_launcher=0x7f020058;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1091,20 +1092,21 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050070;
+        public static final int action_settings=0x7f050071;
+        public static final int action_share=0x7f050070;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int blankArea=0x7f050065;
         public static final int checkbox=0x7f05002d;
         public static final int classroomno=0x7f050044;
+        public static final int classroomnobtn=0x7f050045;
         public static final int classroomnoofpeople=0x7f050048;
-        public static final int classroomnoofpeoplespinner=0x7f050049;
-        public static final int classroomnospinner=0x7f050045;
+        public static final int classroomnoofpeoplebtn=0x7f050049;
         public static final int classroomstatus=0x7f05004a;
         public static final int classroomstatusspinner=0x7f05004b;
         public static final int classroomtype=0x7f050046;
-        public static final int classroomtypespinner=0x7f050047;
+        public static final int classroomtypebtn=0x7f050047;
         public static final int collapseActionView=0x7f05000d;
         public static final int dateTicker=0x7f050063;
         public static final int default_activity_button=0x7f050028;
@@ -1129,8 +1131,9 @@ containing a value of this type.
         public static final int image=0x7f050027;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
-        public static final int listview=0x7f05006e;
+        public static final int listview=0x7f05006f;
         public static final int middle=0x7f050012;
+        public static final int myspinner_all=0x7f05006e;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
         public static final int normal=0x7f050000;
@@ -1143,6 +1146,7 @@ containing a value of this type.
         public static final int result_time=0x7f050067;
         public static final int results=0x7f050069;
         public static final int resultsList=0x7f05006a;
+        public static final int results_share=0x7f050072;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1154,7 +1158,6 @@ containing a value of this type.
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
         public static final int searchbtn=0x7f05004c;
-        public static final int setbtn=0x7f05006f;
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
@@ -1251,10 +1254,11 @@ containing a value of this type.
         public static final int results=0x7f03001c;
         public static final int spinner=0x7f03001d;
         public static final int support_simple_spinner_dropdown_item=0x7f03001e;
-        public static final int title=0x7f03001f;
     }
     public static final class menu {
-        public static final int main=0x7f0c0000;
+        public static final int cls_spec=0x7f0c0000;
+        public static final int main=0x7f0c0001;
+        public static final int result_menu=0x7f0c0002;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1298,6 +1302,7 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000f;
+        public static final int action_share=0x7f0a002b;
         public static final int app_name=0x7f0a000d;
         public static final int available_results=0x7f0a0028;
         public static final int changedatebutton=0x7f0a0010;
@@ -1324,6 +1329,7 @@ containing a value of this type.
         public static final int starttime=0x7f0a0014;
         public static final int time=0x7f0a0023;
         public static final int title=0x7f0a0021;
+        public static final int title_activity_cls_spec=0x7f0a002a;
         public static final int title_activity_pickertest=0x7f0a0011;
         public static final int usage=0x7f0a0027;
     }
@@ -1354,6 +1360,7 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b008c;
+        public static final int MyDialogStyle=0x7f0b008d;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;
@@ -1462,9 +1469,6 @@ containing a value of this type.
         /**  Base platform-dependent theme providing a light-themed activity. 
          */
         public static final int Theme_Base_Light=0x7f0b007f;
-        /**  MySpinner theme. 
-         */
-        public static final int Theme_dialog=0x7f0b008d;
         /**  Styles in here can be extended for customisation in your application. Each utilises
          one of the Base styles. If Holo themes are available on the current platform version
          they will be used instead of the compat styles. 

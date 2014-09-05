@@ -5,14 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
-import android.view.View;
+import android.widget.Toast;
 
 public class Results extends Activity {
 	//本次查询数据
@@ -25,18 +32,31 @@ public class Results extends Activity {
 	private String[] historical_result_date = {"2014/3/1", "2014/3/2", "2014/3/3"};
 	private String[] historical_result_time = {"14:00-16:00", "15:10-17:00", "11:00-18:00"};
 	
+	//默认页flag
+	private int flag;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
 		
+		//设置返回按钮
+		ActionBar actionBar = getActionBar();  
+	    actionBar.setDisplayHomeAsUpEnabled(true); 
+	    
 		//Tab
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);  
         tabHost.setup();  
         tabHost.addTab(tabHost.newTabSpec("results").setIndicator("查询结果").setContent(R.id.results));  
-  
         tabHost.addTab(tabHost.newTabSpec("historical_results").setIndicator("历史查询结果").setContent(R.id.historical_results));
 		
+        //处理Intent
+        Intent intentFromMain = getIntent();
+        flag=intentFromMain.getIntExtra("tab", 0);
+        
+        //设置默认页
+        tabHost.setCurrentTab(flag);
+        
         //查询结果
 		List<Map<String, Object>> resultItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < result_clsNo.length; i++) {
@@ -73,9 +93,11 @@ public class Results extends Activity {
 		results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Intent searchToResult = new Intent(Results.this, ClsSpec.class);
-				//searchToResult.putExtra("position", position);
-				startActivity(searchToResult);
+				//根据position获得教室号，向后台查找，并将结果放在Intent里
+				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
+				
+				//跳转
+				startActivity(resultToSpec);
 			}
 		});
 		
@@ -83,10 +105,47 @@ public class Results extends Activity {
 		historical_results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Intent searchToResult = new Intent(Results.this, ClsSpec.class);
-				//searchToResult.putExtra("position", position);
-				startActivity(searchToResult);
+				//根据position获得教室号，向后台查找，并将结果放在Intent里
+				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
+				
+				//跳转
+				startActivity(resultToSpec);
 			}
 		});
 	}
-}
+	// 创建分享按钮
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.result_menu, menu);
+			return super.onCreateOptionsMenu(menu);
+		}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		switch (item.getItemId()) {
+		// 单击返回按钮效果设定
+		case android.R.id.home:
+			Intent upIntent = NavUtils.getParentActivityIntent(this);
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				TaskStackBuilder.create(this)
+						.addNextIntentWithParentStack(upIntent)
+						.startActivities();
+			} else {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				NavUtils.navigateUpTo(this, upIntent);
+			}
+			return true;
+			// 分享按钮效果设定
+			case R.id.results_share:
+				Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
+		}
+	}

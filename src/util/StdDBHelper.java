@@ -1,18 +1,16 @@
 package util;
 
-import java.io.FileInputStream;
-
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class StdDBHelper extends SQLiteOpenHelper{
 
-	private static final String DATABASE_NAME="classroom";
-	private static final int DATABASE_VERSION=3;
+	private static final String DATABASE_NAME = "ClassroomChecking.db";
+	private static final String TABLE1_NAME = "Classroom";
+	private static final String TABLE2_NAME = "OrderRecord";
+	private static final int DATABASE_VERSION = 5;
 	private Context context_;
 	
 	public StdDBHelper(Context context) {
@@ -23,16 +21,24 @@ public class StdDBHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.v("create database","create database");
+		//Log.v("create database","create database");
 		// TODO Auto-generated method stub
-		String createTable="CREATE TABLE "+ DATABASE_NAME +" (room String primary key,num integer, numCode integer no null,typeCode integer no null,ClassroomName String,type String no null,NumRange String no null)";
-		db.execSQL(createTable);
-		Log.v("table create",createTable);
+		String createTable1 = "CREATE TABLE " + TABLE1_NAME +
+				"(room String primary key,num integer, " +
+				"numCode integer no null,typeCode integer no null," +
+				"ClassroomName String,type String no null,NumRange String no null)";
+		db.execSQL(createTable1);
+		String createTable2 = "CREATE TABLE " + TABLE2_NAME +
+				" (room String, date String, startTime String, endTime String, " +
+				"personName String, department String, " +
+				"content String, state String, overlap integer)";
+		//Log.v("table create",createTable);
+		db.execSQL(createTable2);
 		readAssets classroomQuery=new readAssets();
-		Log.v("get asset","get asset");
+		//Log.v("get asset","get asset");
 		String classroom_info=classroomQuery.getFromAssets("classroom_full.txt",context_);
 		String[] info=classroom_info.split("\n");
-		Log.v("asset",info.toString());
+		//Log.v("asset",info.toString());
 		for (int i=0;i<info.length;i++)
 		{
 			long id;
@@ -45,17 +51,18 @@ public class StdDBHelper extends SQLiteOpenHelper{
 	    	cv.put("ClassroomName", fields[4]);
 	    	cv.put("type", fields[5]);
 	    	cv.put("NumRange", fields[6]);
-	    	Log.v("insert"+i,"before insert"+fields[0]+" "+fields[1]+" "+fields[2]+" "+fields[3]+" "+fields[4]+" "+fields[5]+" "+fields[6]);
-			id=db.insert(DATABASE_NAME, null, cv);
-			Log.v("insert"+i,"after insert");
+	    	//Log.v("insert"+i,"before insert"+fields[0]+" "+fields[1]+" "+fields[2]+" "+fields[3]+" "+fields[4]+" "+fields[5]+" "+fields[6]);
+			id=db.insert(TABLE1_NAME, null, cv);
+			//Log.v("insert"+i,"after insert");
 		}
-		Log.v("create database complete","create database complete");
+		//Log.v("create database complete","create database complete");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
-		db.execSQL("DROP TABLE IF EXISTS "+DATABASE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE1_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE2_NAME);
 		onCreate(db);
 	}
 
