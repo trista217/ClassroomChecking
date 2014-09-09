@@ -33,8 +33,6 @@ public class HttpHelper {
 
 		for (String queryUrl : queryUrlList) {
 			
-			
-
 			ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
 			String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 			String recordDate = new dealWithUrl().getDate(queryUrl);
