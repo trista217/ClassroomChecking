@@ -10,7 +10,7 @@ public class StdDBHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "ClassroomChecking.db";
 	private static final String TABLE1_NAME = "Classroom";
 	private static final String TABLE2_NAME = "OrderRecord";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 5;
 	private Context context_;
 
 	public StdDBHelper(Context context) {

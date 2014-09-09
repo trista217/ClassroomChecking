@@ -300,7 +300,7 @@ public class MainActivity extends Activity {
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
 				Bundle toPresent = new Bundle();
 				toPresent.putInt("tab", 0);
-				toPresent.putSerializable("results", re);
+//				toPresent.putSerializable("results", re);
 				searchToResult.putExtras(toPresent);
 				startActivity(searchToResult);
 			}
@@ -444,7 +444,7 @@ public class MainActivity extends Activity {
 		classroomtypelist = new ArrayList<String>(result_Type.get("type"));		
 	}
 	
-	//
+	//测试是否链接到网络
 	private void testNetworkConn(query userQuery) {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -452,7 +452,7 @@ public class MainActivity extends Activity {
 			// generate query urls
 			ArrayList<String> queryUrlList = new generateQueryUrl().genQueryUrl(userQuery);
 			QueryAndUrlsForAsync queryAndUrls = new QueryAndUrlsForAsync(userQuery, queryUrlList);
-			Log.d("httptask", "start http task");
+			Log.d("In MainActivity", "start http task");
 			//使用HttpTask
 			new HttpTask().execute(queryAndUrls);
 		} else {

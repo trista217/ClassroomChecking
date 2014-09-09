@@ -3,8 +3,10 @@ package domain;
 
 public class Result {
 	private String room;
-	private String overlap;
-	private String nearestUsedTime;
+	private String date;
+	private String bestOverlap;
+	private String bestAvailableStartTime;
+	private String bestAvailableEndTime;
 	private int _id;
 	
 	public Result()
@@ -12,51 +14,65 @@ public class Result {
 		super();
 	}
 	
-	public Result(String room, String overlap, String nearestUsedTime, query q, int _id)
+	public Result(String room, String bestOverlap, String bestAvailableStartTime, String bestAvailableEndTime,int _id)
 	{
 		this.room = room;
-		this.overlap = overlap;
-		this.nearestUsedTime = nearestUsedTime;
+		this.bestOverlap = bestOverlap;
+		this.bestAvailableStartTime = bestAvailableStartTime;
+		this.bestAvailableEndTime = bestAvailableEndTime;
 		this._id = _id;
 	}
-	
-	public void setRoom(String roomNum)
-	{
-		this.room = room;
-	}
-	
-	public void setOverlap(String overlap)
-	{
-		this.overlap = overlap;
-	}
-	
-	public void setNearestUsedTime(String nearestUsedTime)
-	{
-		this.nearestUsedTime = nearestUsedTime;
-	}
-	
-	public void setID(int _id)
-	{
-		this._id = _id;
-	}
-	
-	public String getRoom()
-	{
+
+	public String getRoom() {
 		return room;
 	}
-	
-	public String getOverlap()
-	{
-		return overlap;
+
+	public void setRoom(String room) {
+		this.room = room;
 	}
-	
-	public String getNearestUsedTime()
-	{
-		return nearestUsedTime;
+
+	public String getDate() {
+		return date;
 	}
-	
-	public int getID()
-	{
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getBestOverlap() {
+		return bestOverlap;
+	}
+
+	public void setBestOverlap(String bestOverlap) {
+		this.bestOverlap = bestOverlap;
+	}
+
+	public String getBestAvailableStartTime() {
+		return bestAvailableStartTime;
+	}
+
+	public void setBestAvailableStartTime(String bestAvailableStartTime) {
+		this.bestAvailableStartTime = bestAvailableStartTime;
+	}
+
+	public String getBestAvailableEndTime() {
+		return bestAvailableEndTime;
+	}
+
+	public void setBestAvailableEndTime(String bestAvailableEndTime) {
+		this.bestAvailableEndTime = bestAvailableEndTime;
+	}
+
+	public int get_id() {
 		return _id;
+	}
+
+	public void set_id(int _id) {
+		this._id = _id;
+	}
+	
+	public void printResult()
+	{
+		System.out.println(room + " " + date + " " + bestOverlap);
 	}
 }

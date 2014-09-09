@@ -7,7 +7,16 @@ public class Record {
 	private String personName;
 	private String department;
 	private String content;
-	private String state;
+	private String status;
+	private String recordType;
+	public String getRecordType() {
+		return recordType;
+	}
+
+	public void setRecordType(String recordType) {
+		this.recordType = recordType;
+	}
+
 	private int _id;
 	
 	public String getDate() {
@@ -42,8 +51,8 @@ public class Record {
 		return content;
 	}
 	
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
 	public void setDate(String date) {
@@ -70,8 +79,8 @@ public class Record {
 		this.content = content;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

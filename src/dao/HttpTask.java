@@ -6,7 +6,7 @@ import domain.QueryAndUrlsForAsync;
 
 public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	
-	private static final String DEBUG_TAG = "HttpTask";
+	private static final String DEBUG_TAG = "In HttpTask";
 	@Override
 	protected String doInBackground(QueryAndUrlsForAsync... queryAndUrlsList) {
 		Log.d(DEBUG_TAG, "do in bg");
@@ -19,12 +19,12 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//need to be changed
 		return "do In bg over!";
 	}
 	
 	//need to be changed
 	protected void onPostExecute(String result) {
+		Log.d(DEBUG_TAG, "on post execute");
 		System.out.println(result);
 	}
 }

@@ -9,7 +9,7 @@ public class generateQueryUrl {
 	private static final String BASE_URL = "http://crm.sem.tsinghua.edu.cn/psc/CRMPRD/EMPLOYEE/CRM/s/WEBLIB_TZ_JSCX.TZ_JSCX_SELT.FieldFormula.IScript_GetRmRes?";
 
 	public ArrayList<String> genQueryUrl(query userQuery) {
-		Log.v("gen urls", "gen urls");
+		Log.v("gen query urls", "gen urls");
 		String startTimeStr = userQuery.getStartTime();
 		String endTimeStr = userQuery.getEndTime();
 		String startDateStr = userQuery.getStartDate();
@@ -32,6 +32,8 @@ public class generateQueryUrl {
 				finalQueryUrl.add(tmpQuery);
 			}
 		}
+		Log.v("gen query urls", "gen urls finished");
+		Log.v("gen query urls", "*****************");
 		return finalQueryUrl;
 	}
 	

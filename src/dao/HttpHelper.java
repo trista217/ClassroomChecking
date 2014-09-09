@@ -24,27 +24,31 @@ public class HttpHelper {
 	public static void parseUrl(QueryAndUrlsForAsync queryAndUrls)
 			throws IOException, ParseException {
 
-		Log.v("parse url", "parse url");
+		Log.v("In HttpHelper", "parse url");
 
 		query userQuery = queryAndUrls.getUserQuery();
 		ArrayList<String> queryUrlList = queryAndUrls.getQueryUrlList();
 		dealWithTime timeDealer = new dealWithTime();
-		System.out.println("contents from Jsoup:");
+		
 
 		for (String queryUrl : queryUrlList) {
+			
+			
 
 			ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
 			String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 			String recordDate = new dealWithUrl().getDate(queryUrl);
-			Log.v("url cnt", recordRoomId + recordDate);
+			System.out.println("query on:" + recordRoomId + recordDate);
+			Log.v("In HttpHelper", recordRoomId + recordDate);
 			String bestAvailableStartTime = null;
 			String bestAvailableEndTime = null;
 			String lastRecordEndTime = null;
 			String bestOverlap = "0000";
 			int recordNum = 1;
+			Log.v("In HttpHelper", "running jsoup");
 			Document doc = Jsoup.connect(queryUrl).get();
 			String recordType = doc.getElementsByTag("result").text();
-
+//			Log.v("In HttpHelper", "testing");
 			if (recordType.equals("占用")) {
 				Elements records = doc.getElementsByTag("record");
 				for (Element record : records) {
@@ -129,16 +133,16 @@ public class HttpHelper {
 			RecordForDao.setSharedValues(recordRoomId, recordDate, bestOverlap,
 					bestOverlapFloat, bestAvailableStartTime,
 					bestAvailableEndTime);
-			System.out.println(RecordForDao.getRecordRoomId() + ";"
+			System.out.println("Result for this query:"+RecordForDao.getRecordRoomId() + ";"
 					+ RecordForDao.getRecordDate() + ";"
 					+ RecordForDao.getBestOverlap() + ";"
 					+ RecordForDao.getBestAvailableStartTime() + ";"
 					+ RecordForDao.getBestAvailableEndTime());
 
 			dbMgr.insertRecordForDao(recordsList);
-			Log.v("db", "print");
+//			Log.v("In HttpHelper", "print");
 			//dbMgr.printDB();
-			Log.v("db", "end insert into db");
+			Log.v("In HttpHelper", "back to HttpHelper");
 			// break;
 		}
 

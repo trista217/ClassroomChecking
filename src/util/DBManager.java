@@ -96,7 +96,8 @@ public class DBManager {
 		ArrayList<Result> resultList = new ArrayList<Result>();
 		int index = 0;
 
-		String sql = "SELECT DISTINCT room, bestOverlapFloat FROM " + TABLE_NAME
+		String sql = "SELECT DISTINCT room, date, bestOverlapFloat," +
+				"bestAvailableStartTime, bestAvailableEndTime  FROM " + TABLE_NAME
 				+ " ORDER BY bestOverlapFloat";
 		Cursor c = db.rawQuery(sql, null);
 
@@ -105,10 +106,14 @@ public class DBManager {
 			//Log.v("dbFetch", "start1");
 			Result r = new Result();
 			r.setRoom(c.getString(0).toString());
-			r.setOverlap(c.getString(1).toString());
-			r.setID(index);
+			r.setDate(c.getString(1).toString());
+			r.setBestOverlap(c.getString(2).toString());
+			r.setBestAvailableStartTime(c.getString(3).toString());
+			r.setBestAvailableEndTime(c.getString(4).toString());
+			r.set_id(index);
 			index++;
 			resultList.add(r);
+			r.printResult();
 			//Log.v("dbFetch", "end1");
 		}
 		c.close();
@@ -123,11 +128,6 @@ public class DBManager {
 		for (RecordForDao record : recordForDaoList) {
 			long id;
 			ContentValues cv = new ContentValues();
-			// " (room String, date String, bestOverlap String, bestAvailableStartTime String, bestAvailableEndTime String,"
-			// +
-			// "recordType String, recordStartTime String, recordEndTime String, recordOverlap String"
-			// +
-			// "recordPersonName String, recordDepartment String, recordStatus String,recordContent String)";
 			cv.put("room", RecordForDao.getRecordRoomId());
 			cv.put("date", RecordForDao.getRecordDate());
 			cv.put("bestOverlap", RecordForDao.getBestOverlap());
@@ -171,7 +171,8 @@ public class DBManager {
 
 		int index = 0;
 
-		sql = "SELECT date, startTime, endTime, personName, department, content, state FROM"
+		sql = "SELECT date, recordStartTime, recordEndTime, recordName, recordDepartment, " +
+				"recordContent, recordstatus, recordType FROM"
 				+ TABLE_ORDERRECORD + "WHERE room = ?";
 		Cursor c2 = db.rawQuery(sql, new String[] { _room });
 		while (c2.moveToNext()) {
@@ -182,7 +183,8 @@ public class DBManager {
 			r.setPersonName(c2.getString(3).toString());
 			r.setDepartment(c2.getString(4).toString());
 			r.setContent(c2.getString(5).toString());
-			r.setState(c2.getString(6).toString());
+			r.setStatus(c2.getString(6).toString());
+			r.setRecordType(c2.getString(7).toString());
 			r.set_id(index);
 			index++;
 			recordList.add(r);
