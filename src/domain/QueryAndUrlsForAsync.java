@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class QueryAndUrlsForAsync {
 	private query userQuery;
 	private ArrayList<String> queryUrlList;
+	//public static Object lock;
 
 	public QueryAndUrlsForAsync() {
 		super();
@@ -13,6 +14,7 @@ public class QueryAndUrlsForAsync {
 	public QueryAndUrlsForAsync(query userQuery, ArrayList<String> queryUrlList) {
 		this.userQuery = userQuery;
 		this.queryUrlList = queryUrlList;
+		//this.lock=lock;
 	}
 
 	public query getUserQuery() {

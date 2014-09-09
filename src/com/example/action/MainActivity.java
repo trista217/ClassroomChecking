@@ -296,13 +296,14 @@ public class MainActivity extends Activity {
 				//dbManager.printDB();
 				re = dbManager.fetchResult(userQuery);
 				
-				//给Results传值
-				Intent searchToResult = new Intent(MainActivity.this, Results.class);
-				Bundle toPresent = new Bundle();
-				toPresent.putInt("tab", 0);
-				toPresent.putSerializable("results", re);
-				searchToResult.putExtras(toPresent);
-				startActivity(searchToResult);
+				//以下这些转移到了HttpTask中
+//				//给Results传值
+//				Intent searchToResult = new Intent(MainActivity.this, Results.class);
+//				Bundle toPresent = new Bundle();
+//				toPresent.putInt("tab", 0);
+//				toPresent.putSerializable("results", re);
+//				searchToResult.putExtras(toPresent);
+//				startActivity(searchToResult);
 			}
 		});
 		
@@ -454,7 +455,8 @@ public class MainActivity extends Activity {
 			QueryAndUrlsForAsync queryAndUrls = new QueryAndUrlsForAsync(userQuery, queryUrlList);
 			Log.d("httptask", "start http task");
 			//使用HttpTask
-			new HttpTask().execute(queryAndUrls);
+			HttpTask httptask = new HttpTask(MainActivity.this,dbManager);
+			httptask.execute(queryAndUrls);
 		} else {
 			Toast.makeText(getApplicationContext(), "No network connection!",
 					Toast.LENGTH_LONG).show();
