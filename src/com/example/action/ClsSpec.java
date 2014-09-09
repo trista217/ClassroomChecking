@@ -86,7 +86,7 @@ public class ClsSpec extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		switch (item.getItemId()) {
+		switch (id) {
 		// 单击返回按钮效果设定
 		case android.R.id.home:
 			Intent upIntent = NavUtils.getParentActivityIntent(this);

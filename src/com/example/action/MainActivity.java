@@ -13,16 +13,26 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
+import dao.HttpHelper;
+import dao.HttpTask;
+import dao.generateQueryUrl;
+import domain.QueryAndUrlsForAsync;
 import domain.query;
 	
 public class MainActivity extends Activity {
@@ -30,12 +40,6 @@ public class MainActivity extends Activity {
 	private EditText enddate = null;
 	private EditText starttime = null;
 	private EditText endtime = null;
-	private Spinner classroomnospinner;
-	private ArrayAdapter<String> classroomnoadapter;
-	private Spinner classroomtypespinner;
-	private ArrayAdapter<String> classroomtypeadapter;
-	private Spinner classroomnoofpeoplespinner;
-	private ArrayAdapter<String> classroomnoofpeopleadapter;
 	private Spinner classroomstatusspinner;
 	private ArrayAdapter<String> classroomstatusadapter;
 	// 用来保存年月日：
@@ -87,8 +91,14 @@ public class MainActivity extends Activity {
 	private ArrayList<String> all_classroomtypelist = new ArrayList<String>(Arrays.asList(all_classroomtypearray));
 	private ArrayList<String> checked_classroomtypelist = new ArrayList<String>(Arrays.asList(checked_classroomtypearray));
 	
+	//status
+	private String[] classroomstatusarray = { "空闲", "占用" };
+	private boolean classroomstatus = true; // true代表空闲
+	
 	//数据库
 	private DBManager dbManager;
+	private domain.Results re;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +106,9 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);				
 		
 		dbManager = new DBManager(this);
+		//将dbMgr传入HttpHelper
+		HttpHelper.setDbMgr(dbManager);
+		
 		startdate = (EditText) findViewById(R.id.startdateDisplay);
 		enddate = (EditText) findViewById(R.id.enddateDisplay);
 		starttime = (EditText) findViewById(R.id.starttimeDisplay);
@@ -152,19 +165,12 @@ public class MainActivity extends Activity {
 		startMin = endMin = currentDate.get(Calendar.MINUTE);
 		
 		// 设置文本的内容：
-		startdate.setText(new StringBuilder().append(startYear).append("年")
-				.append(startMonth + 1).append("月")// 得到的月份+1，因为从0开始
-				.append(startDay).append("日"));
-		enddate.setText(new StringBuilder().append(endYear).append("年")
-				.append(endMonth + 1).append("月")// 得到的月份+1，因为从0开始
-				.append(endDay).append("日"));
-		starttime.setText(new StringBuilder().append(pad(startHour))
-				.append(":").append(pad(startMin)));
-		endtime.setText(new StringBuilder().append(pad(endHour)).append(":")
-				.append(pad(endMin)));
+		startdate.setText(new StringBuilder().append(startYear).append("年").append(startMonth + 1).append("月").append(startDay).append("日"));
+		enddate.setText(new StringBuilder().append(endYear).append("年").append(endMonth + 1).append("月").append(endDay).append("日"));
+		starttime.setText(new StringBuilder().append(pad(startHour)).append(":").append(pad(startMin)));
+		endtime.setText(new StringBuilder().append(pad(endHour)).append(":").append(pad(endMin)));
 		
 		// 创建选择教室号的MultiSpinnerActivity
-		// 可以根据service层数据处理实现根据已选择教室类型自动筛选过滤教室号
 		classroomNoButton = (Button) findViewById(R.id.classroomnobtn);
 		classroomNoButton.setText("全部    ▼");
 		classroomNoButton.setOnClickListener(new OnClickListener() {
@@ -184,7 +190,6 @@ public class MainActivity extends Activity {
 		});
 
 		// 创建选择教室人数的MySpinner
-		// 可以根据service层数据处理实现根据已选择其他参数自动筛选过滤，这里的classroomnoofpeoplearray只是测试数据集
 		classroomNoOfPeopleButton = (Button) findViewById(R.id.classroomnoofpeoplebtn);
 		classroomNoOfPeopleButton.setText("全部    ▼");
 		classroomNoOfPeopleButton.setOnClickListener(new OnClickListener() {
@@ -204,7 +209,6 @@ public class MainActivity extends Activity {
 		});
 		
 		// 创建选择教室类型的MySpinner
-		// 可以根据service层数据处理实现根据已选择其他参数自动筛选过滤，这里的classroomtypearray只是测试数据集
 		classroomTypeButton = (Button) findViewById(R.id.classroomtypebtn);
 		classroomTypeButton.setText("全部    ▼");
 		classroomTypeButton.setOnClickListener(new OnClickListener() {
@@ -225,14 +229,21 @@ public class MainActivity extends Activity {
 
 		// 创建选择教室状态的Spinner
 		classroomstatusspinner = (Spinner) findViewById(R.id.classroomstatusspinner);
-		// classroomstatusarray
-		String[] classroomstatusarray = { "空闲", "占用" };
-		classroomstatusadapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, classroomstatusarray);
-		// 设置样式
-		classroomstatusadapter
-				.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		classroomstatusadapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, classroomstatusarray);
+		classroomstatusadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		classroomstatusspinner.setAdapter(classroomstatusadapter);
+		classroomstatusspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				classroomstatus = (position == 1)?false:true;
+				Log.v("test", ""+classroomstatus);
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				classroomstatus = true;
+            }
+		});
 		
 		//点击“搜索”转到结果页，应该为点击搜索向后台传值，值返回后startActivity，之后再修改吧
 		Button search = (Button) findViewById(R.id.searchbtn);
@@ -240,23 +251,56 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				//给后台传值
-				//@大头，你把需要传入的ArrayList修改一下吧
 				Map<String,ArrayList<String>> search = new HashMap<String,ArrayList<String>>();
 				search.put("ClassroomName", checked_classroomnolist);
 				search.put("NumRange", checked_classroomnoofpeoplelist);
 				search.put("type", checked_classroomtypelist);
-				//得到查询结果
 				Map<String, ArrayList<String>> result_search = (new checkAndSearch()).checkMap(search,dbManager);
-				//将查询结果中的教室名称转化为教室号
-				ArrayList<String> room = (new checkAndSearch()).NameToID(result_search.get("ClassroomName"),dbManager);
 				
-				//@大头 需构造query传值，query方式如下
-				//query searchInfo=new query(startdate, enddate, starttime,endtime, room, isAvaliable);
+				//构造query，duration那里只是简单算了一下，可能会把没超天数的算超了，大家要是觉得不行我再做精细点 @猩猩@阳哥@申哥@猪头
+				String startDate_String = Integer.toString(startYear) + ((startMonth+1)>=10?"":"0") + Integer.toString(startMonth+1) + (startDay>=10?"":"0") + Integer.toString(startDay);
+				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay);
+				String startTime_String = (startHour>=10?"":"0") + Integer.toString(startHour) + (startMin>=10?"":"0") + Integer.toString(startMin);
+				String endTime_String = (endHour>=10?"":"0") + Integer.toString(endHour) + (endMin>=10?"":"0") + Integer.toString(endMin);
+				ArrayList<String> roomId = (new checkAndSearch()).NameToID(result_search.get("ClassroomName"),dbManager);
+				ArrayList<String> type = result_search.get("type");
+				ArrayList<String> number = result_search.get("NumRange");
+				//Log.v("test",startDate_String);
+				//Log.v("test",startTime_String);
+				//Log.v("test",endTime_String);
+				boolean isAvaliable = classroomstatus;
 				
-				//给Results传值，待补全
+				// check
+				//这三种情况估计不会再出现，你再看看 @猩猩
+				/*if(roomId.isEmpty()) {
+					Toast.makeText(getApplicationContext(), "至少选择一个教室", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(type.isEmpty()) {
+					Toast.makeText(getApplicationContext(), "至少选择一种类型的教室", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(number.isEmpty()) {
+					Toast.makeText(getApplicationContext(), "请选择教室人数", Toast.LENGTH_SHORT).show();
+					return;
+				}*/
+				if(duration_int>7) {
+					Toast.makeText(getApplicationContext(), "查询日期过长", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				query userQuery = new query(startDate_String, duration_int, startTime_String, endTime_String, roomId, type, number, isAvaliable);
+
+				// 测试是否连接到网络,testNetworkConn()需要放进MainActivity里面
+				testNetworkConn(userQuery);
+				//dbManager.printDB();
+				re = dbManager.fetchResult(userQuery);
+				
+				//给Results传值
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
 				Bundle toPresent = new Bundle();
 				toPresent.putInt("tab", 0);
+				toPresent.putSerializable("results", re);
 				searchToResult.putExtras(toPresent);
 				startActivity(searchToResult);
 			}
@@ -268,6 +312,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				//给后台传值
+				
 				
 				//给Results传值，待补全
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
@@ -294,10 +339,7 @@ public class MainActivity extends Activity {
 			startYear = year;
 			startMonth = monthOfYear;
 			startDay = dayOfMonth;
-			// 设置文本的内容：
-			startdate.setText(new StringBuilder().append(startYear).append("年")
-					.append(startMonth + 1).append("月")// 得到的月份+1，因为从0开始
-					.append(startDay).append("日"));
+			startdate.setText(new StringBuilder().append(startYear).append("年").append(startMonth + 1).append("月").append(startDay).append("日"));
 		}
 	};
 	private DatePickerDialog.OnDateSetListener endDateSetListener = new OnDateSetListener() {
@@ -376,7 +418,6 @@ public class MainActivity extends Activity {
 		}
 
 		//将三个button的checked打3个包
-		//@大头ClassroomName,NumRange,type这三个名字你千万别改！！！
 		Map<String,ArrayList<String>> for_NO = new HashMap<String,ArrayList<String>>();
 		for_NO.put("ClassroomName", all_classroomnolist);
 		for_NO.put("NumRange", checked_classroomnoofpeoplelist);
@@ -392,12 +433,32 @@ public class MainActivity extends Activity {
 		for_Type.put("NumRange", checked_classroomnoofpeoplelist);
 		for_Type.put("type", all_classroomtypelist);
 		
-		//上述每个包向数据库查询1次，共返回3个包；除了no，noOfPeople，type之外其他的属性都是all @猪头
+		//上述每个包向数据库查询1次，共返回3个包；除了no，noOfPeople，type之外其他的属性都是all
 		Map<String, ArrayList<String>> result_NO = (new checkAndSearch()).checkMap(for_NO,dbManager);
 		Map<String, ArrayList<String>> result_NOP = (new checkAndSearch()).checkMap(for_NOP,dbManager);
 		Map<String, ArrayList<String>> result_Type = (new checkAndSearch()).checkMap(for_Type,dbManager);
-		//我把以上三个结果打印在LogCat里了，黑色的就是
-		//根据返回的3个包更新3个要显示的list；这部分等上一个写了再说
 		
+		//根据返回的3个包更新3个要显示的list
+		classroomnolist = new ArrayList<String>(result_NO.get("ClassroomName"));
+		classroomnoofpeoplelist = new ArrayList<String>(result_NOP.get("NumRange"));
+		classroomtypelist = new ArrayList<String>(result_Type.get("type"));		
+	}
+	
+	//
+	private void testNetworkConn(query userQuery) {
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// generate query urls
+			ArrayList<String> queryUrlList = new generateQueryUrl().genQueryUrl(userQuery);
+			QueryAndUrlsForAsync queryAndUrls = new QueryAndUrlsForAsync(userQuery, queryUrlList);
+			Log.d("httptask", "start http task");
+			//使用HttpTask
+			new HttpTask().execute(queryAndUrls);
+		} else {
+			Toast.makeText(getApplicationContext(), "No network connection!",
+					Toast.LENGTH_LONG).show();
+//			postResult.setText("No network connection!");
+		}
 	}
 }

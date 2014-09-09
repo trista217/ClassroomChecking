@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ResultDetails {
+public class ResultDetails implements Serializable{
 	private String room;
 	private String type;
 	private String ClassroomName;

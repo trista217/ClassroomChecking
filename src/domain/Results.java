@@ -1,8 +1,9 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Results {
+public class Results implements Serializable{
 	private query q;
 	private ArrayList<Result> resultList;
 	
@@ -22,10 +23,10 @@ public class Results {
 		return q.getStartDate();
 	}
 	
-	public String getEndDate()
+	/*public String getEndDate()
 	{
 		return q.getEndDate();
-	}
+	}*/
 	
 	public String getStartTime()
 	{

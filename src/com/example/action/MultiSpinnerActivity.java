@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class MultiSpinnerActivity extends Activity {
@@ -48,7 +49,9 @@ public class MultiSpinnerActivity extends Activity {
 				
 				//设置最终显示内容
 				if(list.size()==0){
-					print = new String("至少选择一项");
+					//print = new String("至少选择一项");
+					Toast.makeText(getApplicationContext(), "请至少选择一项", Toast.LENGTH_SHORT).show();
+					return;
 				}else if(list.size()==all.size()) {
 					print = new String("全部");
 				}else{

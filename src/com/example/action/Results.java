@@ -22,12 +22,12 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 public class Results extends Activity {
-	//本次查询数据
+	//本次查询数据，按需要更改格式及数据类型
 	private String[] result_clsNo = {"舜德101", "舜德102", "伟伦501"};
 	private String[] result_date = {"2014/1/1", "2014/1/2", "2014/1/3"};
 	private String[] result_time = {"14:20-16:20", "15:10-16:00", "12:00-18:00"};
 	
-	//历史查询数据
+	//历史查询数据，按需要更改格式及数据类型
 	private String[] historical_result_clsNo = {"舜德401", "舜德418", "伟伦401"};
 	private String[] historical_result_date = {"2014/3/1", "2014/3/2", "2014/3/3"};
 	private String[] historical_result_time = {"14:00-16:00", "15:10-17:00", "11:00-18:00"};
@@ -53,10 +53,16 @@ public class Results extends Activity {
         //处理Intent
         Intent intentFromMain = getIntent();
         flag=intentFromMain.getIntExtra("tab", 0);
+        if(flag==0) {
+        	//本次查询结果
+        }else {
+        	//历史结果
+        	
+        }
         
         //设置默认页
         tabHost.setCurrentTab(flag);
-        
+
         //查询结果
 		List<Map<String, Object>> resultItems = new ArrayList<Map<String, Object>>();
 		for (int i = 0; i < result_clsNo.length; i++) {
@@ -93,7 +99,7 @@ public class Results extends Activity {
 		results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				//根据position获得教室号，向后台查找，并将结果放在Intent里
+				//根据position获得教室号，向后台查找ResultDetails，并将结果放在Intent里
 				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
 				
 				//跳转
@@ -105,7 +111,7 @@ public class Results extends Activity {
 		historical_results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				//根据position获得教室号，向后台查找，并将结果放在Intent里
+				//根据position获得教室号，向后台查找ResultDetails，并将结果放在Intent里
 				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
 				
 				//跳转
@@ -127,7 +133,7 @@ public class Results extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		switch (item.getItemId()) {
+		switch (id) {
 		// 单击返回按钮效果设定
 		case android.R.id.home:
 			Intent upIntent = NavUtils.getParentActivityIntent(this);
