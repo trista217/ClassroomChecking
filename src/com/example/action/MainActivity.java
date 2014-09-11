@@ -1,5 +1,6 @@
 package com.example.action;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -291,7 +292,11 @@ public class MainActivity extends Activity {
 				query userQuery = new query(startDate_String, duration_int, startTime_String, endTime_String, roomId, type, number, isAvaliable);
 
 				// 测试是否连接到网络,testNetworkConn()需要放进MainActivity里面
-				testNetworkConn(userQuery);
+				try {
+					testNetworkConn(userQuery);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				//dbManager.printDB();
 				//re = dbManager.fetchResult(userQuery);
 				
@@ -451,7 +456,7 @@ public class MainActivity extends Activity {
 	}
 	
 	//
-	private void testNetworkConn(query userQuery) {
+	private void testNetworkConn(query userQuery) throws ParseException {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {

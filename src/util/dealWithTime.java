@@ -4,11 +4,16 @@ import android.annotation.SuppressLint;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class dealWithTime {
 	@SuppressLint("SimpleDateFormat")
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("HHmm");
+	private static final SimpleDateFormat TIME_SDF = new SimpleDateFormat(
+			"HHmm");
+	@SuppressLint("SimpleDateFormat")
+	private static final SimpleDateFormat DATE_SDF = new SimpleDateFormat(
+			"yyyyMMdd");
 
 	public String calOverlap(String timeString1, String timeString2)
 			throws ParseException {
@@ -31,7 +36,7 @@ public class dealWithTime {
 		}
 
 		String timeDiffStr = timeDiffHourStr + timeDiffMinStr;
-		Date overlapDate = SDF.parse(timeDiffStr);
+		Date overlapDate = TIME_SDF.parse(timeDiffStr);
 		String overlapString = dateToString(overlapDate);
 		return overlapString;
 	}
@@ -47,11 +52,28 @@ public class dealWithTime {
 		}
 		return result;
 	}
+	
+	public int calDateDuration(String startDateString, String endDateString)
+			throws ParseException {
+		Date startDate = DATE_SDF.parse(startDateString);
+		Date endDate = DATE_SDF.parse(endDateString);
+		Long day = (endDate.getTime() - startDate.getTime()) / 86400000;
+		int duration = Integer.parseInt(String.valueOf(day));
+		return duration;
+	}
+	
+	public String dateIncrement(String dateString,int i) throws ParseException {
+		Date date = DATE_SDF.parse(dateString);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR)+i);
+		return DATE_SDF.format(calendar.getTime());		
+	}
 
 	public Date stringToDate(String timeString) {
 		Date timeDate = null;
 		try {
-			timeDate = SDF.parse(timeString);
+			timeDate = TIME_SDF.parse(timeString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -60,7 +82,7 @@ public class dealWithTime {
 
 	public String dateToString(Date timeDate) {
 		String timeString = null;
-		timeString = SDF.format(timeDate);
+		timeString = TIME_SDF.format(timeDate);
 		return timeString;
 	}
 	
