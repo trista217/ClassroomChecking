@@ -70,50 +70,51 @@
         android:layout_column="1"
         android:cursorVisible="false"
         android:editable="false" />
-    
+
     <TextView
-        android:id="@+id/classroomno"
+        android:id="@+id/classroomtype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="4"
+        android:layout_column="0"
+        android:text="@string/classroomtype" />
+
+    <Button
+        android:id="@+id/classroomtypebtn"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal"
+        android:layout_row="4"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/classroomnoofpeople"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="5"
+        android:layout_column="0"
+        android:text="@string/classroomnoofpeople" />
+    
+	<Button
+		android:id="@+id/classroomnoofpeoplebtn"
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_row="5"
+        android:layout_column="1"
+		android:textSize="14sp"/>
+	
+	<TextView
+        android:id="@+id/classroomno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="6"
         android:layout_column="0"
         android:text="@string/classroomno" />
 
     
     <Button
 		android:id="@+id/classroomnobtn"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:layout_row="4"
-        android:layout_column="1"
-		android:textSize="14sp"/>
-    
-    <TextView
-        android:id="@+id/classroomtype"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="5"
-        android:layout_column="0"
-        android:text="@string/classroomtype" />
-
-    <Button
-		android:id="@+id/classroomtypebtn"
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:layout_row="5"
-        android:layout_column="1"
-		android:textSize="14sp"/>
-
-    <TextView
-        android:id="@+id/classroomnoofpeople"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="6"
-        android:layout_column="0"
-        android:text="@string/classroomnoofpeople" />
-    
-	<Button
-		android:id="@+id/classroomnoofpeoplebtn"
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:layout_row="6"

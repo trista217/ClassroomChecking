@@ -1,5 +1,7 @@
 package dao;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.util.Log;
 import domain.query;
@@ -8,14 +10,14 @@ public class generateQueryUrl {
 
 	private static final String BASE_URL = "http://crm.sem.tsinghua.edu.cn/psc/CRMPRD/EMPLOYEE/CRM/s/WEBLIB_TZ_JSCX.TZ_JSCX_SELT.FieldFormula.IScript_GetRmRes?";
 
-	public ArrayList<String> genQueryUrl(query userQuery) {
-		Log.v("gen query urls", "gen urls");
+	public Map<String,ArrayList<String>> genQueryUrl(query userQuery) {
+		Log.v("gen urls", "gen urls");
 		String startTimeStr = userQuery.getStartTime();
 		String endTimeStr = userQuery.getEndTime();
 		String startDateStr = userQuery.getStartDate();
 		int duration = userQuery.getDuration();
 		ArrayList<String> roomIdList = userQuery.getRoomId();
-		ArrayList<String> finalQueryUrl = new ArrayList<String>();
+		Map<String,ArrayList<String>> finalQueryUrl = new HashMap<String, ArrayList<String>>();
 
 		// roomIdList.add("WL401");
 		// roomIdList.add("SD401");
@@ -24,16 +26,16 @@ public class generateQueryUrl {
 
 		int startDateInt = Integer.parseInt(startDateStr);
 		for (String roomId : roomIdList) {
+			ArrayList<String> temp = new ArrayList<String>();
 			for (int i = 0; i < duration; i++) {
 				Integer curDateInt = startDateInt + i;
 				String curDateStr = curDateInt.toString();
 				String tmpQuery = genTmpQuery(roomId, curDateStr, startTimeStr,
 						endTimeStr);
-				finalQueryUrl.add(tmpQuery);
+				temp.add(tmpQuery);
 			}
+			finalQueryUrl.put(roomId, temp);
 		}
-		Log.v("gen query urls", "gen urls finished");
-		Log.v("gen query urls", "*****************");
 		return finalQueryUrl;
 	}
 	

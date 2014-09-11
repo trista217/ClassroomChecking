@@ -1,18 +1,21 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class QueryAndUrlsForAsync {
 	private query userQuery;
-	private ArrayList<String> queryUrlList;
+	private Map<String,ArrayList<String>> queryUrlList;
+	//public static Object lock;
 
 	public QueryAndUrlsForAsync() {
 		super();
 	}
 
-	public QueryAndUrlsForAsync(query userQuery, ArrayList<String> queryUrlList) {
+	public QueryAndUrlsForAsync(query userQuery, Map<String,ArrayList<String>> queryUrlList) {
 		this.userQuery = userQuery;
 		this.queryUrlList = queryUrlList;
+		//this.lock=lock;
 	}
 
 	public query getUserQuery() {
@@ -23,11 +26,11 @@ public class QueryAndUrlsForAsync {
 		this.userQuery = userQuery;
 	}
 
-	public ArrayList<String> getQueryUrlList() {
+	public Map<String,ArrayList<String>> getQueryUrlList() {
 		return queryUrlList;
 	}
 
-	public void setQueryUrlList(ArrayList<String> queryUrlList) {
+	public void setQueryUrlList(Map<String,ArrayList<String>> queryUrlList) {
 		this.queryUrlList = queryUrlList;
 	}
 

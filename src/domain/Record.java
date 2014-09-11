@@ -1,23 +1,32 @@
 package domain;
 
-public class Record {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Record implements Parcelable{
 	private String date;
 	private String startTime;
 	private String endTime;
 	private String personName;
 	private String department;
 	private String content;
-	private String status;
-	private String recordType;
-	public String getRecordType() {
-		return recordType;
-	}
-
-	public void setRecordType(String recordType) {
-		this.recordType = recordType;
-	}
-
+	private String state;
 	private int _id;
+	
+	public Record() {
+		super();
+	}
+	
+	public Record(Record r) {
+		this.date = r.getDate();
+		this.startTime = r.getStartTime();
+		this.endTime = r.getEndTime();
+		this.personName = r.getPersonName();
+		this.department = r.getDepartment();
+		this.content = r.getContent();
+		this.state = r.getState();
+		this._id = r.get_id();
+	}
 	
 	public String getDate() {
 		return date;
@@ -51,8 +60,8 @@ public class Record {
 		return content;
 	}
 	
-	public String getStatus() {
-		return status;
+	public String getState() {
+		return state;
 	}
 
 	public void setDate(String date) {
@@ -79,9 +88,45 @@ public class Record {
 		this.content = content;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(String state) {
+		this.state = state;
 	}
 	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 	
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeString(this.date);
+		out.writeString(this.startTime);
+		out.writeString(this.endTime);
+		out.writeString(this.personName);
+		out.writeString(this.department);
+		out.writeString(this.content);
+		out.writeString(this.state);
+		out.writeInt(this._id);
+	}
+	
+	public static final Parcelable.Creator<Record> CREATOR = new Parcelable.Creator<Record>() {
+		@Override
+		public Record createFromParcel(Parcel in) {
+			Record r = new Record();
+			r.setDate(in.readString());
+			r.setStartTime(in.readString());
+			r.setEndTime(in.readString());
+			r.setPersonName(in.readString());
+			r.setDepartment(in.readString());
+			r.setContent(in.readString());
+			r.setState(in.readString());
+			r.set_id(in.readInt());
+			return r;
+		}
+		
+		@Override
+		public Record[] newArray(int size) {
+			return new Record[size];
+		}
+	};
 }

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import domain.Record;
+import domain.ResultDetails;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,44 +23,56 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ClsSpec extends Activity {
+	// 测试数据
+	private String classroomNoText = new String("舜德101");
+	private String classroomTypeText = new String("讨论间");
+	private String classroomNoOfPeopleText = new String("13");
+	private String classroomStatusText = new String("占用");
+	private String[] spec_person = { "琦妹", "猪头", "阳哥" };
+	private String[] spec_school = { "管科", "金融", "会计" };
+	private String[] spec_date = { "2014/1/1", "2014/1/2", "2014/1/3" };
+	private String[] spec_time = { "14:20-16:20", "15:10-16:00", "12:00-18:00" };
+	private String[] spec_usage = { "班会", "讲座", "上课" };
+	
+	//正式数据
+	ResultDetails rd = new ResultDetails();
+	ArrayList<Record> rec;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.clsspec);
+		
+		//接受Intent
+		Intent intentFromResults = getIntent();
+		rd = intentFromResults.getParcelableExtra("spec");
+		rec = new ArrayList<Record>(rd.getRecordList());
+		
 		// 设置返回按钮
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		// 数据
-		String classroomNoText = new String("舜德101");
-		String classroomTypeText = new String("讨论间");
-		String classroomNoOfPeopleText = new String("13");
-		String classroomStatusText = new String("占用");
-		String[] spec_person = { "琦妹", "猪头", "阳哥" };
-		String[] spec_school = { "管科", "金融", "会计" };
-		String[] spec_date = { "2014/1/1", "2014/1/2", "2014/1/3" };
-		String[] spec_time = { "14:20-16:20", "15:10-16:00", "12:00-18:00" };
-		String[] spec_usage = { "班会", "讲座", "上课" };
 
 		// 借用信息
 		TextView classroomNo = (TextView) findViewById(R.id.spec_classroomno);
-		classroomNo.setText(classroomNoText);
+		classroomNo.setText(rd.getClassroomName());
 		TextView classroomType = (TextView) findViewById(R.id.spec_classroomtype);
-		classroomType.setText(classroomTypeText);
+		classroomType.setText(rd.getType());
 		TextView classroomNoOfPeople = (TextView) findViewById(R.id.spec_classroomnoofpeople);
-		classroomNoOfPeople.setText(classroomNoOfPeopleText);
-		TextView classroomStatus = (TextView) findViewById(R.id.spec_classroomstatus);
-		classroomStatus.setText(classroomStatusText);
+		classroomNoOfPeople.setText(rd.getNum());
+		//是否加status
+		//TextView classroomStatus = (TextView) findViewById(R.id.spec_classroomstatus);
+		//classroomStatus.setText(classroomStatusText);
 
 		// 借用者信息
 		List<Map<String, Object>> specItems = new ArrayList<Map<String, Object>>();
-		for (int i = 0; i < spec_person.length; i++) {
+		for (int i = 0; i < rec.size(); i++) {
 			Map<String, Object> item = new HashMap<String, Object>();
-			item.put("spec_person", spec_person[i]);
-			item.put("spec_school", spec_school[i]);
-			item.put("spec_date", spec_date[i]);
-			item.put("spec_time", spec_time[i]);
-			item.put("spec_usage", spec_usage[i]);
+			item.put("spec_person", rec.get(i).getPersonName());
+			item.put("spec_school", rec.get(i).getDepartment());
+			item.put("spec_date", rec.get(i).getDate());
+			item.put("spec_time", rec.get(i).getStartTime() + "-" + rec.get(i).getEndTime());
+			item.put("spec_usage", rec.get(i).getContent());
+			//status我觉得还是应该加上面，或者不加
 			specItems.add(item);
 		}
 

@@ -1,12 +1,13 @@
 package domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Result {
+
+public class Result implements Parcelable{
 	private String room;
-	private String date;
-	private String bestOverlap;
-	private String bestAvailableStartTime;
-	private String bestAvailableEndTime;
+	private String overlap;
+	private String nearestUsedTime;
 	private int _id;
 	
 	public Result()
@@ -14,15 +15,26 @@ public class Result {
 		super();
 	}
 	
-	public Result(String room, String bestOverlap, String bestAvailableStartTime, String bestAvailableEndTime,int _id)
+	public Result(String room, String overlap, String nearestUsedTime, query q, int _id)
 	{
 		this.room = room;
-		this.bestOverlap = bestOverlap;
-		this.bestAvailableStartTime = bestAvailableStartTime;
-		this.bestAvailableEndTime = bestAvailableEndTime;
+		this.overlap = overlap;
+		this.nearestUsedTime = nearestUsedTime;
 		this._id = _id;
 	}
 
+	public String getClassroomName() {
+		String ClassroomName;
+		if (room.equals("SDDT"))
+			ClassroomName = "舜德大厅";
+		else
+		{
+			ClassroomName = room.replaceAll("SD", "舜德");
+			ClassroomName = room.replaceAll("WL", "伟伦");
+		}
+		return ClassroomName;
+	}
+	
 	public String getRoom() {
 		return room;
 	}
@@ -31,36 +43,20 @@ public class Result {
 		this.room = room;
 	}
 
-	public String getDate() {
-		return date;
+	public String getOverlap() {
+		return overlap;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setOverlap(String overlap) {
+		this.overlap = overlap;
 	}
 
-	public String getBestOverlap() {
-		return bestOverlap;
+	public String getNearestUsedTime() {
+		return nearestUsedTime;
 	}
 
-	public void setBestOverlap(String bestOverlap) {
-		this.bestOverlap = bestOverlap;
-	}
-
-	public String getBestAvailableStartTime() {
-		return bestAvailableStartTime;
-	}
-
-	public void setBestAvailableStartTime(String bestAvailableStartTime) {
-		this.bestAvailableStartTime = bestAvailableStartTime;
-	}
-
-	public String getBestAvailableEndTime() {
-		return bestAvailableEndTime;
-	}
-
-	public void setBestAvailableEndTime(String bestAvailableEndTime) {
-		this.bestAvailableEndTime = bestAvailableEndTime;
+	public void setNearestUsedTime(String nearestUsedTime) {
+		this.nearestUsedTime = nearestUsedTime;
 	}
 
 	public int get_id() {
@@ -71,8 +67,33 @@ public class Result {
 		this._id = _id;
 	}
 	
-	public void printResult()
-	{
-		System.out.println(room + " " + date + " " + bestOverlap);
+	@Override
+	public int describeContents() {
+		return 0;
 	}
+	
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeString(this.room);
+		out.writeString(this.overlap);
+		out.writeString(this.nearestUsedTime);
+		out.writeInt(this._id);
+	}
+	
+	public static final Parcelable.Creator<Result> CREATOR = new Parcelable.Creator<Result>() {
+		@Override
+		public Result createFromParcel(Parcel in) {
+			Result r = new Result();
+			r.setRoom(in.readString());
+			r.setOverlap(in.readString());
+			r.setNearestUsedTime(in.readString());
+			r.set_id(in.readInt());
+			return r;
+		}
+		
+		@Override
+		public Result[] newArray(int size) {
+			return new Result[size];
+		}
+	};
 }

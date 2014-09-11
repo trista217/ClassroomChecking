@@ -55,10 +55,20 @@ public class DBManager {
 				.get("room");
 		return result;
 	}
+	
+//	public String idtoname(String room) {
+//		// TODO Auto-generated method stub
+//		String DATABASE_NAME = "classroom";
+//		QuerySql sqlquery = new QuerySql();
+//		ArrayList<String> result = sqlquery.sqlQuery(
+//				"Select DISTINCT ClassroomName from " + DATABASE_NAME + "where room = \""+ room +"\"", helper)
+//				.get("ClassroomName");
+//		return result.get(0);
+//	}
 
 	public Map<String, ArrayList<String>> getbythreelimit(
 			Map<String, ArrayList<String>> map) {
-		Log.v("checkAndSearch", "checkAndSearch");
+		//Log.v("checkAndSearch", "checkAndSearch");
 		String DATABASE_NAME = "classroom";
 		Map<String, ArrayList<String>> result = new LinkedHashMap<String, ArrayList<String>>();
 		Map<String, ArrayList<String>> temp = new LinkedHashMap<String, ArrayList<String>>();
@@ -96,25 +106,24 @@ public class DBManager {
 		ArrayList<Result> resultList = new ArrayList<Result>();
 		int index = 0;
 
-		String sql = "SELECT DISTINCT room, date, bestOverlapFloat," +
-				"bestAvailableStartTime, bestAvailableEndTime  FROM " + TABLE_NAME
+		//但是限制不了结束日期，因为只有duration
+		String sql = "SELECT DISTINCT room, bestOverlapFloat FROM " + TABLE_NAME 
+				+ " where date > \""+q.getStartDate()+"\" and recordStartTime > \""
+				+ q.getStartTime()+"\" and recordEndTime < \"" 
+				+ q.getEndTime() +"\""
 				+ " ORDER BY bestOverlapFloat";
 		Cursor c = db.rawQuery(sql, null);
 
-		
+		c.moveToFirst();
 		while (c.moveToNext()) {
-			//Log.v("dbFetch", "start1");
+			Log.v("dbFetch", "start1");
 			Result r = new Result();
 			r.setRoom(c.getString(0).toString());
-			r.setDate(c.getString(1).toString());
-			r.setBestOverlap(c.getString(2).toString());
-			r.setBestAvailableStartTime(c.getString(3).toString());
-			r.setBestAvailableEndTime(c.getString(4).toString());
+			r.setOverlap(c.getString(1).toString());
 			r.set_id(index);
 			index++;
 			resultList.add(r);
-			r.printResult();
-			//Log.v("dbFetch", "end1");
+			Log.v("dbFetch", "end1");
 		}
 		c.close();
 
@@ -123,11 +132,16 @@ public class DBManager {
 	}
 
 	public void insertRecordForDao(ArrayList<RecordForDao> recordForDaoList) {
-		Log.v("db", "start insert into db");
+		//Log.v("db", "start insert into db");
 		String TABLE_NAME = "OrderRecord";
 		for (RecordForDao record : recordForDaoList) {
 			long id;
 			ContentValues cv = new ContentValues();
+			// " (room String, date String, bestOverlap String, bestAvailableStartTime String, bestAvailableEndTime String,"
+			// +
+			// "recordType String, recordStartTime String, recordEndTime String, recordOverlap String"
+			// +
+			// "recordPersonName String, recordDepartment String, recordStatus String,recordContent String)";
 			cv.put("room", RecordForDao.getRecordRoomId());
 			cv.put("date", RecordForDao.getRecordDate());
 			cv.put("bestOverlap", RecordForDao.getBestOverlap());
@@ -171,8 +185,7 @@ public class DBManager {
 
 		int index = 0;
 
-		sql = "SELECT date, recordStartTime, recordEndTime, recordName, recordDepartment, " +
-				"recordContent, recordstatus, recordType FROM"
+		sql = "SELECT date, startTime, endTime, personName, department, content, state FROM"
 				+ TABLE_ORDERRECORD + "WHERE room = ?";
 		Cursor c2 = db.rawQuery(sql, new String[] { _room });
 		while (c2.moveToNext()) {
@@ -183,8 +196,7 @@ public class DBManager {
 			r.setPersonName(c2.getString(3).toString());
 			r.setDepartment(c2.getString(4).toString());
 			r.setContent(c2.getString(5).toString());
-			r.setStatus(c2.getString(6).toString());
-			r.setRecordType(c2.getString(7).toString());
+			r.setState(c2.getString(6).toString());
 			r.set_id(index);
 			index++;
 			recordList.add(r);
