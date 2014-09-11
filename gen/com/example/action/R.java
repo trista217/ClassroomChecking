@@ -29,9 +29,9 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f090035;
-        public static final int action_share=0x7f090034;
-        public static final int blankArea=0x7f090029;
+        public static final int action_settings=0x7f090037;
+        public static final int action_share=0x7f090036;
+        public static final int blankArea=0x7f09002b;
         public static final int classroomno=0x7f09000c;
         public static final int classroomnobtn=0x7f09000d;
         public static final int classroomnoofpeople=0x7f09000a;
@@ -46,17 +46,19 @@ public final class R {
         public static final int endtime=0x7f090006;
         public static final int endtimeDisplay=0x7f090007;
         public static final int hissearchbtn=0x7f090011;
-        public static final int historical_results=0x7f09002f;
-        public static final int historical_resultsList=0x7f090030;
-        public static final int listview=0x7f090033;
-        public static final int myspinner_all=0x7f090032;
-        public static final int over_text=0x7f090031;
+        public static final int historical_results=0x7f090031;
+        public static final int historical_resultsList=0x7f090032;
+        public static final int listview=0x7f090035;
+        public static final int myspinner_all=0x7f090034;
+        public static final int over_text=0x7f090033;
+        public static final int overlapTicker=0x7f090029;
         public static final int result_classroomno=0x7f090026;
         public static final int result_date=0x7f090028;
-        public static final int result_time=0x7f09002b;
-        public static final int results=0x7f09002d;
-        public static final int resultsList=0x7f09002e;
-        public static final int results_share=0x7f090036;
+        public static final int result_overlap=0x7f09002a;
+        public static final int result_time=0x7f09002d;
+        public static final int results=0x7f09002f;
+        public static final int resultsList=0x7f090030;
+        public static final int results_share=0x7f090038;
         public static final int searchbtn=0x7f090010;
         public static final int spec_classroomno=0x7f090013;
         public static final int spec_classroomnoofpeople=0x7f090017;
@@ -82,8 +84,8 @@ public final class R {
         public static final int startdateDisplay=0x7f090001;
         public static final int starttime=0x7f090004;
         public static final int starttimeDisplay=0x7f090005;
-        public static final int tabhost=0x7f09002c;
-        public static final int timeTicker=0x7f09002a;
+        public static final int tabhost=0x7f09002e;
+        public static final int timeTicker=0x7f09002c;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -100,16 +102,18 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f060002;
-        public static final int action_share=0x7f06001e;
+        public static final int action_share=0x7f06001f;
         public static final int app_name=0x7f060000;
-        public static final int available_results=0x7f06001b;
+        public static final int availableTime=0x7f060017;
+        public static final int available_results=0x7f06001c;
+        public static final int bestOverlapText=0x7f060020;
         public static final int changedatebutton=0x7f060003;
         public static final int classroomno=0x7f060009;
         public static final int classroomnoofpeople=0x7f06000d;
         public static final int classroomnoofpeopletip=0x7f06000f;
         public static final int classroomnotip=0x7f06000a;
         public static final int classroomstatus=0x7f06000e;
-        public static final int classroomstatusspec=0x7f060017;
+        public static final int classroomstatusspec=0x7f060018;
         public static final int classroomstatustip=0x7f060010;
         public static final int classroomtype=0x7f06000b;
         public static final int classroomtypetip=0x7f06000c;
@@ -118,18 +122,18 @@ public final class R {
         public static final int endtime=0x7f060008;
         public static final int hello_world=0x7f060001;
         public static final int hissearch=0x7f060012;
-        public static final int historical_results=0x7f06001c;
-        public static final int person=0x7f060018;
-        public static final int school=0x7f060019;
+        public static final int historical_results=0x7f06001d;
+        public static final int person=0x7f060019;
+        public static final int school=0x7f06001a;
         public static final int search=0x7f060011;
         public static final int set=0x7f060013;
         public static final int startdate=0x7f060005;
         public static final int starttime=0x7f060007;
         public static final int time=0x7f060016;
         public static final int title=0x7f060014;
-        public static final int title_activity_cls_spec=0x7f06001d;
+        public static final int title_activity_cls_spec=0x7f06001e;
         public static final int title_activity_pickertest=0x7f060004;
-        public static final int usage=0x7f06001a;
+        public static final int usage=0x7f06001b;
     }
     public static final class style {
         /** 

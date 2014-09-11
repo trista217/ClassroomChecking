@@ -21,13 +21,13 @@ public class generateQueryUrl {
 		ArrayList<String> roomIdList = userQuery.getRoomId();
 		Map<String,ArrayList<String>> finalQueryUrl = new HashMap<String, ArrayList<String>>();
 		dealWithTime timeDealer = new dealWithTime();
+		
 
 		// roomIdList.add("WL401");
 		// roomIdList.add("SD401");
 
 		// "rm_no=SD301&res_day=20140814&s_time=0600&e_time=1830"
 
-		
 		for (String roomId : roomIdList) {
 			ArrayList<String> temp = new ArrayList<String>();
 			for (int i = 0; i < duration; i++) {
@@ -40,7 +40,7 @@ public class generateQueryUrl {
 		}
 		return finalQueryUrl;
 	}
-	
+
 	private String genTmpQuery(String roomId, String curDateStr,
 			String startTimeStr, String endTimeStr) {
 		return BASE_URL + "rm_no=" + roomId + "&res_day=" + curDateStr

@@ -1,36 +1,43 @@
 package domain;
 
+import util.dealWithTime;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/*
+ * Record类为详情页的占用记录信息。
+ * _id用以标记条目顺序，实际未使用
+ */
+
 public class Record implements Parcelable{
-	private String date;
+	//private String date;
 	private String startTime;
 	private String endTime;
 	private String personName;
 	private String department;
 	private String content;
-	private String state;
+	private String status;
 	private int _id;
+	private static final dealWithTime d = new dealWithTime();
 	
 	public Record() {
 		super();
 	}
 	
 	public Record(Record r) {
-		this.date = r.getDate();
+		//this.date = r.getDate();
 		this.startTime = r.getStartTime();
 		this.endTime = r.getEndTime();
 		this.personName = r.getPersonName();
 		this.department = r.getDepartment();
 		this.content = r.getContent();
-		this.state = r.getState();
+		this.status = r.getStatus();
 		this._id = r.get_id();
 	}
 	
-	public String getDate() {
+	/*public String getDate() {
 		return date;
-	}
+	}*/
 	
 	public String getStartTime() {
 		return startTime;
@@ -60,13 +67,13 @@ public class Record implements Parcelable{
 		return content;
 	}
 	
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setDate(String date) {
+	/*public void setDate(String date) {
 		this.date = date;
-	}
+	}*/
 
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
@@ -88,8 +95,8 @@ public class Record implements Parcelable{
 		this.content = content;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	@Override
@@ -99,13 +106,13 @@ public class Record implements Parcelable{
 	
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeString(this.date);
+		//out.writeString(this.date);
 		out.writeString(this.startTime);
 		out.writeString(this.endTime);
 		out.writeString(this.personName);
 		out.writeString(this.department);
 		out.writeString(this.content);
-		out.writeString(this.state);
+		out.writeString(this.status);
 		out.writeInt(this._id);
 	}
 	
@@ -113,13 +120,13 @@ public class Record implements Parcelable{
 		@Override
 		public Record createFromParcel(Parcel in) {
 			Record r = new Record();
-			r.setDate(in.readString());
+			//r.setDate(in.readString());
 			r.setStartTime(in.readString());
 			r.setEndTime(in.readString());
 			r.setPersonName(in.readString());
 			r.setDepartment(in.readString());
 			r.setContent(in.readString());
-			r.setState(in.readString());
+			r.setStatus(in.readString());
 			r.set_id(in.readInt());
 			return r;
 		}

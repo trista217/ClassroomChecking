@@ -24,6 +24,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         
+	</LinearLayout>
+	
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">s
+        
+        <TextView
+            android:id="@+id/overlapTicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bestOverlapText"/>
+        
+        <TextView
+            android:id="@+id/result_overlap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
         <TextView
             android:id="@+id/blankArea"
             android:layout_width="wrap_content"
@@ -34,7 +52,7 @@
             android:id="@+id/timeTicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/time"/>
+            android:text="@string/availableTime"/>
         
         <TextView
             android:id="@+id/result_time"

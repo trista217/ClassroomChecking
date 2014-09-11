@@ -24,6 +24,7 @@
     <string name="title">标题栏</string>
     <string name="date">日期：</string>
     <string name="time">时间：</string>
+    <string name="availableTime">最近可用时间：</string>
     <string name="classroomstatusspec">教室占用详情：</string>
     <string name="person">姓名：</string>
     <string name="school">系别：</string>
@@ -32,5 +33,6 @@
     <string name="historical_results">历史查询结果如下：</string>
     <string name="title_activity_cls_spec">ClsSpec</string>
     <string name="action_share">分享到微信</string>
+    <string name="bestOverlapText">最长可用时间：</string>
 
 </resources>

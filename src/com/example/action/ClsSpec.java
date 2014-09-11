@@ -7,6 +7,7 @@ import java.util.Map;
 
 import domain.Record;
 import domain.ResultDetails;
+import domain.query;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -37,6 +38,7 @@ public class ClsSpec extends Activity {
 	//正式数据
 	ResultDetails rd = new ResultDetails();
 	ArrayList<Record> rec;
+	String date = new String();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class ClsSpec extends Activity {
 		
 		//接受Intent
 		Intent intentFromResults = getIntent();
+		date = intentFromResults.getStringExtra("date");
 		rd = intentFromResults.getParcelableExtra("spec");
 		rec = new ArrayList<Record>(rd.getRecordList());
 		
@@ -59,7 +62,7 @@ public class ClsSpec extends Activity {
 		classroomType.setText(rd.getType());
 		TextView classroomNoOfPeople = (TextView) findViewById(R.id.spec_classroomnoofpeople);
 		classroomNoOfPeople.setText(rd.getNum());
-		//是否加status
+		//是否加status，目前讨论是不加
 		//TextView classroomStatus = (TextView) findViewById(R.id.spec_classroomstatus);
 		//classroomStatus.setText(classroomStatusText);
 
@@ -69,19 +72,15 @@ public class ClsSpec extends Activity {
 			Map<String, Object> item = new HashMap<String, Object>();
 			item.put("spec_person", rec.get(i).getPersonName());
 			item.put("spec_school", rec.get(i).getDepartment());
-			item.put("spec_date", rec.get(i).getDate());
-			item.put("spec_time", rec.get(i).getStartTime() + "-" + rec.get(i).getEndTime());
+			item.put("spec_date", date); //格式需要再改
+			item.put("spec_time", rec.get(i).getStartTime().substring(0, 1) + ":" + rec.get(i).getStartTime().substring(2, 3) + "-" + rec.get(i).getEndTime().substring(0, 1) + ":" + rec.get(i).getEndTime().substring(2, 3));
 			item.put("spec_usage", rec.get(i).getContent());
-			//status我觉得还是应该加上面，或者不加
 			specItems.add(item);
 		}
 
-		SimpleAdapter eachItem = new SimpleAdapter(this, specItems,
-				R.layout.clsspecstatus_item,
-				new String[] { "spec_person", "spec_school", "spec_date",
-						"spec_time", "spec_usage" }, new int[] {
-						R.id.spec_person, R.id.spec_school, R.id.spec_date,
-						R.id.spec_time, R.id.spec_usage });
+		SimpleAdapter eachItem = new SimpleAdapter(this, specItems, R.layout.clsspecstatus_item,
+				new String[] { "spec_person", "spec_school", "spec_date", "spec_time", "spec_usage" }, 
+				new int[] {R.id.spec_person, R.id.spec_school, R.id.spec_date, R.id.spec_time, R.id.spec_usage });
 		ListView spec = (ListView) findViewById(R.id.spec_statuslist);
 		spec.setAdapter(eachItem);
 	}

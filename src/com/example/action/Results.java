@@ -78,14 +78,15 @@ public class Results extends Activity {
 		for (int i = 0; i < resultArrayList.size(); i++) {
 			Map<String, Object> item = new HashMap<String, Object>();
 			item.put("result_clsNo", resultArrayList.get(i).getRoom());
-			item.put("result_date", resultArrayList.get(i).getOverlap());//这里暂时替代一下，之后要改
-			item.put("result_time", resultArrayList.get(i).getNearestUsedTime());//输出格式还要调整，建议在类里写个函数
+			item.put("result_date", resultArrayList.get(i).getDate());
+			item.put("result_bestOverlap", resultArrayList.get(i).getBestOverlap());
+			item.put("result_availableTime", resultArrayList.get(i).getBestAvailableStartTime().substring(0, 1) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 3) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 1) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 3));
 			resultItems.add(item);
 		}
 		
 		SimpleAdapter eachItem = new SimpleAdapter(this, resultItems, R.layout.result_item, 
-				new String[] {"result_clsNo", "result_date", "result_time"}, 
-				new int[] {R.id.result_classroomno, R.id.result_date, R.id.result_time});
+				new String[] {"result_clsNo", "result_date", "result_bestOverlap", "result_availableTime"}, 
+				new int[] {R.id.result_classroomno, R.id.result_date, R.id.result_overlap, R.id.result_time});
 		ListView results = (ListView) findViewById(R.id.resultsList);
 		results.setAdapter(eachItem);
 		
@@ -111,11 +112,12 @@ public class Results extends Activity {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				//根据position获得教室号，向后台查找ResultDetails(参数为Results.this.q和roomId_click)，返回一个ResultDetails类，填下面括号里
 				Results.this.q = Results.this.re.getQuery();
-				String roomId_click = Results.this.re.getAllResult().get(position).getClassroomName();
+				String roomId_click = Results.this.re.getAllResult().get(position).getRoom();
 				
 				ResultDetails rd = new ResultDetails();//填空@猪头
 				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
 				Bundle bundleForSpec = new Bundle();
+				bundleForSpec.putString("date", Results.this.re.getAllResult().get(position).getDate());
 				bundleForSpec.putParcelable("spec", rd);
 				resultToSpec.putExtras(bundleForSpec);
 				

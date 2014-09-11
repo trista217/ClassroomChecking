@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/*Results类封装了查询的条件以及所有结果
+ * q存储了查询条件，resultList存储了所有的查询结果
+ * 当查询条件为空闲时，resultList先按照空闲时间长度降序排列，后按照日期升序排列
+ * 当查询条件为占用时，（待讨论）
+ */
+
 public class Results implements Parcelable{
 	private query q;
 	private ArrayList<Result> resultList;
