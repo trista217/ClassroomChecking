@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import domain.Result;
+import domain.ResultDetails;
+import domain.query;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +30,7 @@ public class Results extends Activity {
 	private String[] result_clsNo = {"舜德101", "舜德102", "伟伦501"};
 	private String[] result_date = {"2014/1/1", "2014/1/2", "2014/1/3"};
 	private String[] result_time = {"14:20-16:20", "15:10-16:00", "12:00-18:00"};
+	private ArrayList<Result> resultArrayList = new ArrayList<Result>();
 	
 	//历史查询数据，按需要更改格式及数据类型
 	private String[] historical_result_clsNo = {"舜德401", "舜德418", "伟伦401"};
@@ -34,6 +39,9 @@ public class Results extends Activity {
 	
 	//默认页flag
 	private int flag;
+	
+	private domain.Results re = new domain.Results();
+	private query q = new query();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,8 @@ public class Results extends Activity {
         flag=intentFromMain.getIntExtra("tab", 0);
         if(flag==0) {
         	//本次查询结果
+        	re = intentFromMain.getParcelableExtra("results");
+        	resultArrayList = re.getAllResult();
         }else {
         	//历史结果
         	
@@ -65,17 +75,18 @@ public class Results extends Activity {
 
         //查询结果
 		List<Map<String, Object>> resultItems = new ArrayList<Map<String, Object>>();
-		for (int i = 0; i < result_clsNo.length; i++) {
+		for (int i = 0; i < resultArrayList.size(); i++) {
 			Map<String, Object> item = new HashMap<String, Object>();
-			item.put("result_clsNo", result_clsNo[i]);
-			item.put("result_date", result_date[i]);
-			item.put("result_time", result_time[i]);
+			item.put("result_clsNo", resultArrayList.get(i).getRoom());
+			item.put("result_date", resultArrayList.get(i).getDate());
+			item.put("result_bestOverlap", resultArrayList.get(i).getBestOverlap());
+			item.put("result_availableTime", resultArrayList.get(i).getBestAvailableStartTime().substring(0, 1) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 3) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 1) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 3));
 			resultItems.add(item);
 		}
 		
 		SimpleAdapter eachItem = new SimpleAdapter(this, resultItems, R.layout.result_item, 
-				new String[] {"result_clsNo", "result_date", "result_time"}, 
-				new int[] {R.id.result_classroomno, R.id.result_date, R.id.result_time});
+				new String[] {"result_clsNo", "result_date", "result_bestOverlap", "result_availableTime"}, 
+				new int[] {R.id.result_classroomno, R.id.result_date, R.id.result_overlap, R.id.result_time});
 		ListView results = (ListView) findViewById(R.id.resultsList);
 		results.setAdapter(eachItem);
 		
@@ -99,8 +110,16 @@ public class Results extends Activity {
 		results.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				//根据position获得教室号，向后台查找ResultDetails，并将结果放在Intent里
+				//根据position获得教室号，向后台查找ResultDetails(参数为Results.this.q和roomId_click)，返回一个ResultDetails类，填下面括号里
+				Results.this.q = Results.this.re.getQuery();
+				String roomId_click = Results.this.re.getAllResult().get(position).getRoom();
+				
+				ResultDetails rd = new ResultDetails();//填空@猪头
 				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
+				Bundle bundleForSpec = new Bundle();
+				bundleForSpec.putString("date", Results.this.re.getAllResult().get(position).getDate());
+				bundleForSpec.putParcelable("spec", rd);
+				resultToSpec.putExtras(bundleForSpec);
 				
 				//跳转
 				startActivity(resultToSpec);

@@ -10,13 +10,16 @@ import android.util.Log;
 import com.example.action.Results;
 
 import domain.QueryAndUrlsForAsync;
+import domain.query;
 
 public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	
 	private static final String DEBUG_TAG = "HttpTask";
+	
+	private query userQuery;
 	//数据库
 	private domain.Results re;
-	private DBManager dbManager;
+	private static DBManager dbManager;
 	
 	//传入mainactivity
 	private Context context;
@@ -24,9 +27,13 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	//传入数据
 	private QueryAndUrlsForAsync queryAndUrls;
 	
-	public HttpTask (Context context,DBManager dbManager) {
+	public HttpTask (Context context,query userQuery) {
         this.context=context;
-        this.dbManager=dbManager;
+        this.userQuery=userQuery;
+	}
+	
+	public static void setDbMgr(DBManager dbMgr) {
+		HttpTask.dbManager = dbMgr;
 	}
 	
 	@Override
@@ -49,11 +56,15 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	protected void onPostExecute(String result) {
 		System.out.println(result);
 
+		re = dbManager.fetchResult(userQuery);
+		Log.v("database prepared, search for result","re");
+		Log.v("date starttime endtime result",re.getStartDate()+"    "+re.getStartTime()+"    "+re.getEndTime()+"    "+re.getAllResult() /*+ "    " + re.getAllResult().get(0).getNearestUsedTime()*/);
+		
 		//给Results传值
 		Intent searchToResult = new Intent(context, Results.class);
 		Bundle toPresent = new Bundle();
 		toPresent.putInt("tab", 0);
-		toPresent.putSerializable("results", re);
+		toPresent.putParcelable("results", re);
 		searchToResult.putExtras(toPresent);
 		Log.v("onPostExecute","onPostExecute complete");
 		context.startActivity(searchToResult);

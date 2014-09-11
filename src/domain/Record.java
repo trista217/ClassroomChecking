@@ -1,18 +1,43 @@
 package domain;
 
-public class Record {
-	private String date;
+import util.dealWithTime;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+/*
+ * Record类为详情页的占用记录信息。
+ * _id用以标记条目顺序，实际未使用
+ */
+
+public class Record implements Parcelable{
+	//private String date;
 	private String startTime;
 	private String endTime;
 	private String personName;
 	private String department;
 	private String content;
-	private String state;
+	private String status;
 	private int _id;
+	private static final dealWithTime d = new dealWithTime();
 	
-	public String getDate() {
-		return date;
+	public Record() {
+		super();
 	}
+	
+	public Record(Record r) {
+		//this.date = r.getDate();
+		this.startTime = r.getStartTime();
+		this.endTime = r.getEndTime();
+		this.personName = r.getPersonName();
+		this.department = r.getDepartment();
+		this.content = r.getContent();
+		this.status = r.getStatus();
+		this._id = r.get_id();
+	}
+	
+	/*public String getDate() {
+		return date;
+	}*/
 	
 	public String getStartTime() {
 		return startTime;
@@ -42,13 +67,13 @@ public class Record {
 		return content;
 	}
 	
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setDate(String date) {
+	/*public void setDate(String date) {
 		this.date = date;
-	}
+	}*/
 
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
@@ -70,9 +95,45 @@ public class Record {
 		this.content = content;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 	
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		//out.writeString(this.date);
+		out.writeString(this.startTime);
+		out.writeString(this.endTime);
+		out.writeString(this.personName);
+		out.writeString(this.department);
+		out.writeString(this.content);
+		out.writeString(this.status);
+		out.writeInt(this._id);
+	}
+	
+	public static final Parcelable.Creator<Record> CREATOR = new Parcelable.Creator<Record>() {
+		@Override
+		public Record createFromParcel(Parcel in) {
+			Record r = new Record();
+			//r.setDate(in.readString());
+			r.setStartTime(in.readString());
+			r.setEndTime(in.readString());
+			r.setPersonName(in.readString());
+			r.setDepartment(in.readString());
+			r.setContent(in.readString());
+			r.setStatus(in.readString());
+			r.set_id(in.readInt());
+			return r;
+		}
+		
+		@Override
+		public Record[] newArray(int size) {
+			return new Record[size];
+		}
+	};
 }

@@ -51,9 +51,9 @@ public class HttpHelper_parse implements Runnable {
 				String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 				String recordDate = new dealWithUrl().getDate(queryUrl);
 				//Log.v("url cnt", recordRoomId + recordDate);
-				String bestAvailableStartTime = null;
-				String bestAvailableEndTime = null;
-				String lastRecordEndTime = null;
+				String bestAvailableStartTime = "";
+				String bestAvailableEndTime = "";
+				String lastRecordEndTime = "";
 				String bestOverlap = "0000";
 				int recordNum = 1;
 				Document doc = null;
@@ -145,6 +145,14 @@ public class HttpHelper_parse implements Runnable {
 				}
 
 				float bestOverlapFloat = timeDealer.dateStringToFloat(bestOverlap);
+				
+				if (bestAvailableStartTime==null)
+				{
+					Log.w("bestAvailableStartTime", "null!!!!!!!!!!!!");
+					bestAvailableStartTime="";
+				}
+				if (bestAvailableEndTime==null)
+					bestAvailableEndTime="";
 
 				RecordForDao.setSharedValues(recordRoomId, recordDate, bestOverlap,
 						bestOverlapFloat, bestAvailableStartTime,

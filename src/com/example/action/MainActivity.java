@@ -99,6 +99,9 @@ public class MainActivity extends Activity {
 	private DBManager dbManager;
 	private domain.Results re;
 	
+	//加载中
+	HkDialogLoading dialogLoading;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,8 +109,15 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);				
 		
 		dbManager = new DBManager(this);
-		//将dbMgr传入HttpHelper
+		//将dbMgr传入HttpHelper及HttpTask
 		HttpHelper.setDbMgr(dbManager);
+		HttpTask.setDbMgr(dbManager);
+		
+		//清理数据库
+		dbManager.clean();
+		//Log.v("clean database", "clean!!!!!!!!!!!");
+		
+		dialogLoading = new HkDialogLoading(MainActivity.this);
 		
 		startdate = (EditText) findViewById(R.id.startdateDisplay);
 		enddate = (EditText) findViewById(R.id.enddateDisplay);
@@ -249,7 +259,7 @@ public class MainActivity extends Activity {
 		Button search = (Button) findViewById(R.id.searchbtn);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View arg0) {				
 				//给后台传值
 				Map<String,ArrayList<String>> search = new HashMap<String,ArrayList<String>>();
 				search.put("ClassroomName", checked_classroomnolist);
@@ -270,31 +280,24 @@ public class MainActivity extends Activity {
 				//Log.v("test",endTime_String);
 				boolean isAvaliable = classroomstatus;
 				
-				// check
-				//这三种情况估计不会再出现，你再看看 @猩猩
-				/*if(roomId.isEmpty()) {
-					Toast.makeText(getApplicationContext(), "至少选择一个教室", Toast.LENGTH_SHORT).show();
+				if(startHour>endHour||(startHour==endHour&&startMin>=endMin)) {
+					Toast.makeText(getApplicationContext(), "开始时间应早于结束时间", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(type.isEmpty()) {
-					Toast.makeText(getApplicationContext(), "至少选择一种类型的教室", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if(number.isEmpty()) {
-					Toast.makeText(getApplicationContext(), "请选择教室人数", Toast.LENGTH_SHORT).show();
-					return;
-				}*/
-				if(duration_int>7) {
+				if(duration_int>7) { //测试的时候先设成这个，最后再做调整
 					Toast.makeText(getApplicationContext(), "查询日期过长", Toast.LENGTH_SHORT).show();
 					return;
 				}
+				
+				//加载中
+				MainActivity.this.dialogLoading.show();
 
 				query userQuery = new query(startDate_String, duration_int, startTime_String, endTime_String, roomId, type, number, isAvaliable);
 
 				// 测试是否连接到网络,testNetworkConn()需要放进MainActivity里面
 				testNetworkConn(userQuery);
 				//dbManager.printDB();
-				re = dbManager.fetchResult(userQuery);
+				//re = dbManager.fetchResult(userQuery);
 				
 				//以下这些转移到了HttpTask中
 //				//给Results传值
@@ -323,6 +326,12 @@ public class MainActivity extends Activity {
 				startActivity(searchToResult);
 			}
 		});
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		dialogLoading.hide();
 	}
 
 	private static String pad(int c) {
@@ -455,7 +464,7 @@ public class MainActivity extends Activity {
 			QueryAndUrlsForAsync queryAndUrls = new QueryAndUrlsForAsync(userQuery, queryUrlList);
 			Log.d("httptask", "start http task");
 			//使用HttpTask
-			HttpTask httptask = new HttpTask(MainActivity.this,dbManager);
+			HttpTask httptask = new HttpTask(MainActivity.this,userQuery);
 			httptask.execute(queryAndUrls);
 		} else {
 			Toast.makeText(getApplicationContext(), "No network connection!",
@@ -463,4 +472,14 @@ public class MainActivity extends Activity {
 //			postResult.setText("No network connection!");
 		}
 	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		dbManager.clean();
+		dbManager.close();
+	}
+	
+	
 }

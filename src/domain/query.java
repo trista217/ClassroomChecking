@@ -1,9 +1,12 @@
 package domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class query implements Serializable{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class query implements Parcelable{
 
 	private String startDate;
 	private int duration;
@@ -16,6 +19,17 @@ public class query implements Serializable{
 
 	public query() {
 		super();
+	}
+	
+	public query(query q) {
+		this.startDate = q.getStartDate();
+		this.duration = q.getDuration();
+		this.startTime = q.getStartTime();
+		this.endTime = q.getEndTime();
+		this.roomId = q.getRoomId();
+		this.type = q.getType();
+		this.number = q.getNumber();
+		this.isAvaliable = q.isAvaliable();
 	}
 
 	public query(String startDate, int duration, String startTime,
@@ -31,7 +45,7 @@ public class query implements Serializable{
 		this.number = number;
 		this.isAvaliable = isAvaliable;
 	}
-
+	
 	public String getStartDate() {
 		return startDate;
 	}
@@ -103,5 +117,43 @@ public class query implements Serializable{
 	public void setIsAvaliable(boolean isAvaliable) {
 		this.isAvaliable = isAvaliable;
 	}
-
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel out, int flags) 
+    {
+        out.writeString(this.startDate);
+        out.writeInt(this.duration);
+        out.writeString(this.startTime);
+        out.writeString(this.endTime);
+        out.writeStringList(this.roomId);
+        out.writeStringList(this.type);
+        out.writeStringList(this.number);
+        out.writeByte((byte) (this.isAvaliable?1:0));
+    }
+	
+	public static final Parcelable.Creator<query> CREATOR = new Parcelable.Creator<query>() {
+		@Override
+		public query createFromParcel(Parcel in) {
+			query q = new query();
+			q.setStartDate(in.readString());
+			q.setDuration(in.readInt());
+			q.setStartTime(in.readString());
+			q.setEndTime(in.readString());
+			q.setRoomId(in.createStringArrayList());
+			q.setRoomId(in.createStringArrayList());
+			q.setRoomId(in.createStringArrayList());
+			q.setAvaliable(in.readByte()!=0);
+			return q;
+		}
+		
+		@Override
+		public query[] newArray(int size) {
+			return new query[size];
+		}
+	};
 }
