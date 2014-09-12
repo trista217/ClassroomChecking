@@ -5,16 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import service_impl.SearchToDetails;
+import util.DBManager;
+import dao.HttpHelper;
+import domain.Record;
 import domain.Result;
 import domain.ResultDetails;
 import domain.query;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +30,9 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 public class Results extends Activity {
+	
+	private static DBManager dbMgr;
+	
 	//本次查询数据，按需要更改格式及数据类型
 	private String[] result_clsNo = {"舜德101", "舜德102", "伟伦501"};
 	private String[] result_date = {"2014/1/1", "2014/1/2", "2014/1/3"};
@@ -80,7 +87,14 @@ public class Results extends Activity {
 			item.put("result_clsNo", resultArrayList.get(i).getRoom());
 			item.put("result_date", resultArrayList.get(i).getDate());
 			item.put("result_bestOverlap", resultArrayList.get(i).getBestOverlap());
-			item.put("result_availableTime", resultArrayList.get(i).getBestAvailableStartTime().substring(0, 1) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 3) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 1) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 3));
+			//item.put("result_availableTime", resultArrayList.get(i).getBestAvailableStartTime() + ":" + resultArrayList.get(i).getBestAvailableStartTime() + "-" + resultArrayList.get(i).getBestAvailableEndTime() + ":" +resultArrayList.get(i).getBestAvailableEndTime());
+			//Log.v("string out of bound", resultArrayList.get(i).getBestAvailableStartTime() + ":" + resultArrayList.get(i).getBestAvailableStartTime() + "-" + resultArrayList.get(i).getBestAvailableEndTime() + ":" +resultArrayList.get(i).getBestAvailableEndTime());
+			//Log.v("string out of bound all",resultArrayList.get(i).getBestAvailableStartTime().substring(0, 2) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 4) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 2) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 4));
+			String besttime = resultArrayList.get(i).getBestAvailableStartTime().substring(0, 2) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 4) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 2) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 4);
+			if (besttime.equals("00:00-00:00"))
+				item.put("result_availableTime", "无");
+			else
+				item.put("result_availableTime", besttime);
 			resultItems.add(item);
 		}
 		
@@ -115,6 +129,9 @@ public class Results extends Activity {
 				String roomId_click = Results.this.re.getAllResult().get(position).getRoom();
 				
 				ResultDetails rd = new ResultDetails();//填空@猪头
+				//假设是room_Id @大头
+				rd = (new SearchToDetails()).toDetails(Results.this.q, roomId_click, dbMgr);
+				
 				Intent resultToSpec = new Intent(Results.this, ClsSpec.class);
 				Bundle bundleForSpec = new Bundle();
 				bundleForSpec.putString("date", Results.this.re.getAllResult().get(position).getDate());
@@ -173,4 +190,9 @@ public class Results extends Activity {
 				return super.onOptionsItemSelected(item);
 			}
 		}
+	
+	public static void setDbMgr(DBManager dbMgr) {
+		Results.dbMgr = dbMgr;
+	}
+	
 	}

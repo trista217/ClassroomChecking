@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.DBManager;
+import dao.HttpHelper;
 import domain.Record;
 import domain.ResultDetails;
 import domain.query;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ClsSpec extends Activity {
+	
+	private static DBManager dbMgr;
+	
 	// 测试数据
 	private String classroomNoText = new String("舜德101");
 	private String classroomTypeText = new String("讨论间");
@@ -120,5 +124,9 @@ public class ClsSpec extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public static void setDbMgr(DBManager dbMgr) {
+		ClsSpec.dbMgr = dbMgr;
 	}
 }

@@ -55,6 +55,9 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	//need to be changed
 	protected void onPostExecute(String result) {
 		System.out.println(result);
+		
+		//把数据库传下去
+		Results.setDbMgr(dbManager);
 
 		re = dbManager.fetchResult(userQuery);
 		Log.v("database prepared, search for result","re");
