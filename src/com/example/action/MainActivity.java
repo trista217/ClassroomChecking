@@ -270,7 +270,7 @@ public class MainActivity extends Activity {
 
 				//构造query，duration那里只是简单算了一下，可能会把没超天数的算超了，大家要是觉得不行我再做精细点 @猩猩@阳哥@申哥@猪头
 				String startDate_String = Integer.toString(startYear) + ((startMonth+1)>=10?"":"0") + Integer.toString(startMonth+1) + (startDay>=10?"":"0") + Integer.toString(startDay);
-				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay);
+				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay) + 1;
 				String startTime_String = (startHour>=10?"":"0") + Integer.toString(startHour) + (startMin>=10?"":"0") + Integer.toString(startMin);
 				String endTime_String = (endHour>=10?"":"0") + Integer.toString(endHour) + (endMin>=10?"":"0") + Integer.toString(endMin);
 				ArrayList<String> roomId = (new checkAndSearch()).NameToID(result_search.get("ClassroomName"),dbManager);

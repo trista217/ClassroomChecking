@@ -138,7 +138,7 @@ public class DBManager {
 		
 		c.moveToFirst();
 		while (c.moveToNext()) {
-//			Log.v("dbFetch", "start"+index);
+			Log.v("dbFetch", "start"+index);
 			Result r = new Result();
 			Log.v("room",c.getString(0).toString());
 			r.setRoom(c.getString(0).toString());
@@ -169,7 +169,7 @@ public class DBManager {
 	}
 
 	public void insertRecordForDao(ArrayList<RecordForDao> recordForDaoList) {
-		Log.v("db", "start insert into db");
+		Log.v("insert for DAO", "start insert into db");
 		String TABLE_NAME = "OrderRecord";
 		for (RecordForDao record : recordForDaoList) {
 			long id;
@@ -197,6 +197,7 @@ public class DBManager {
 			cv.put("recordContent", record.getRecordContent());
 			id = db.insert(TABLE_NAME, null, cv);
 		}
+		Log.v("insert for DAO", "end insert into db");
 
 	}
 

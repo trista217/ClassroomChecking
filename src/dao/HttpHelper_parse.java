@@ -50,7 +50,7 @@ public class HttpHelper_parse implements Runnable {
 				ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
 				String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 				String recordDate = new dealWithUrl().getDate(queryUrl);
-				//Log.v("url cnt", recordRoomId + recordDate);
+				Log.v("helper_parse", recordRoomId + recordDate);
 				String bestAvailableStartTime = "";
 				String bestAvailableEndTime = "";
 				String lastRecordEndTime = "";
@@ -60,7 +60,7 @@ public class HttpHelper_parse implements Runnable {
 				
 				//synchronized (lock) {
 					//Log.v("before doc",queryUrl);
-					doc = Jsoup.connect(queryUrl).get();
+					doc = Jsoup.connect(queryUrl).timeout(0).get();
 				//}
 				String recordType = doc.getElementsByTag("result").text();
 
@@ -157,6 +157,7 @@ public class HttpHelper_parse implements Runnable {
 				RecordForDao.setSharedValues(recordRoomId, recordDate, bestOverlap,
 						bestOverlapFloat, bestAvailableStartTime,
 						bestAvailableEndTime);
+
 //				System.out.println(RecordForDao.getRecordRoomId() + ";"
 //						+ RecordForDao.getRecordDate() + ";"
 //						+ RecordForDao.getBestOverlap() + ";"
@@ -168,7 +169,7 @@ public class HttpHelper_parse implements Runnable {
 				//}
 				//Log.v("db", "print");
 				//dbMgr.printDB();
-				Log.v("db", "end insert into db");
+//				Log.v("db", "end insert into db");
 				// break;
 			}
 		} catch (IOException e) {
