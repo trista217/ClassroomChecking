@@ -23,12 +23,14 @@ public class HttpHelper {
 		query userQuery = queryAndUrls.getUserQuery();
 		Map<String,Thread> threadmap = new HashMap<String, Thread>();
 		
-		System.out.println("contents from Jsoup:");
+		System.out.println("before start threads");
 
 		for(String roomID:queryUrlList.keySet()){
 			Thread thread = new Thread(new HttpHelper_parse(userQuery,queryUrlList.get(roomID)), "t_"+roomID );
 			threadmap.put(roomID, thread);
+//			System.out.println("before start thread" + roomID);
 			threadmap.get(roomID).start();
+			
 			//Log.v("thread_"+roomID,"start");
 		}
 		

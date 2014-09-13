@@ -1,5 +1,6 @@
 package com.example.action;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -34,7 +35,7 @@ import dao.HttpTask;
 import dao.generateQueryUrl;
 import domain.QueryAndUrlsForAsync;
 import domain.query;
-	
+
 public class MainActivity extends Activity {
 	private EditText startdate = null;
 	private EditText enddate = null;
@@ -53,17 +54,17 @@ public class MainActivity extends Activity {
 	static final int END_DATE_DIALOG_ID = 1;
 	static final int START_TIME_DIALOG_ID = 2;
 	static final int END_TIME_DIALOG_ID = 3;
-	
+
 	//MultiSpinnerActivity的请求码
 	static final int CLS_NO_SELECT_CODE = 1;
 	static final int CLS_NO_OF_P_SELECT_CODE = 2;
 	static final int CLS_TYPE_SELECT_CODE = 3;
-	
+
 	//MultiSpinnerActivity的flag
 	static final int CLS_NO_FLAG = 1;
 	static final int CLS_NO_OF_P_FLAG = 2;
 	static final int CLS_TYPE_FLAG = 3;
-	
+
 	//教室号MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomNoButton;
 	private String[] classroomnoarray ={"﻿伟伦504","伟伦505","伟伦506","伟伦507","伟伦254","舜德404","伟伦120","伟伦362","伟伦363 ","舜德403A","舜德403B","伟伦122","伟伦247","伟伦424","伟伦128","舜德402A","舜德402B","舜德405","舜德406","舜德407","舜德408","舜德204","伟伦415","舜德112","舜德223","舜德306","伟伦110","伟伦248","伟伦385","伟伦412","伟伦453","伟伦305","伟伦232","伟伦512","伟伦205","舜德220","舜德116","伟伦335","伟伦336","伟伦406","伟伦407","舜德325（二段）","舜德325","舜德325（一段）","伟伦404","伟伦513","舜德215","伟伦401","伟伦405","伟伦511","舜德101","伟伦501","伟伦502","伟伦503","舜德102","舜德201","舜德202","舜德301","舜德302","伟伦508","伟伦409","舜德401","伟伦121","舜德418","舜德楼大厅"};
@@ -72,7 +73,7 @@ public class MainActivity extends Activity {
 	private ArrayList<String> classroomnolist = new ArrayList<String>(Arrays.asList(classroomnoarray));//所有会显示的项目的集合
 	private ArrayList<String> all_classroomnolist = new ArrayList<String>(Arrays.asList(all_classroomnoarray));//所有项目集合
 	private ArrayList<String> checked_classroomnolist = new ArrayList<String>(Arrays.asList(checked_classroomnoarray));//用户已勾选项目
-	
+
 	//教室人数MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomNoOfPeopleButton;
 	private String[] classroomnoofpeoplearray ={"1-20", "21-50", "51-100","101及以上"  };
@@ -81,7 +82,7 @@ public class MainActivity extends Activity {
 	private ArrayList<String> classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(classroomnoofpeoplearray));
 	private ArrayList<String> all_classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(all_classroomnoofpeoplearray));
 	private ArrayList<String> checked_classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(checked_classroomnoofpeoplearray));
-	
+
 	//教室类型MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomTypeButton;
 	private String[] classroomtypearray = {"﻿MBA讨论室","报告厅","博士生讨论室","大厅","多功能厅","会议室","活动室","教师休息室","教室","接待室","实验室","讨论室"};
@@ -90,40 +91,40 @@ public class MainActivity extends Activity {
 	private ArrayList<String> classroomtypelist = new ArrayList<String>(Arrays.asList(classroomtypearray));
 	private ArrayList<String> all_classroomtypelist = new ArrayList<String>(Arrays.asList(all_classroomtypearray));
 	private ArrayList<String> checked_classroomtypelist = new ArrayList<String>(Arrays.asList(checked_classroomtypearray));
-	
+
 	//status
 	private String[] classroomstatusarray = { "空闲", "占用" };
 	private boolean classroomstatus = true; // true代表空闲
-	
+
 	//数据库
 	private DBManager dbManager;
 	private domain.Results re;
-	
+
 	//加载中
 	HkDialogLoading dialogLoading;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);				
-		
+		setContentView(R.layout.activity_main);
+
 		dbManager = new DBManager(this);
 		//将dbMgr传入HttpHelper及HttpTask
 		HttpHelper.setDbMgr(dbManager);
 		HttpTask.setDbMgr(dbManager);
-		
+
 		//清理数据库
 		dbManager.clean();
 		//Log.v("clean database", "clean!!!!!!!!!!!");
-		
+
 		dialogLoading = new HkDialogLoading(MainActivity.this);
-		
+
 		startdate = (EditText) findViewById(R.id.startdateDisplay);
 		enddate = (EditText) findViewById(R.id.enddateDisplay);
 		starttime = (EditText) findViewById(R.id.starttimeDisplay);
 		endtime = (EditText) findViewById(R.id.endtimeDisplay);
-		
+
 		// 给EditText添加事件监听器：
 		startdate.setOnClickListener(new OnClickListener() {
 
@@ -165,7 +166,7 @@ public class MainActivity extends Activity {
 				showDialog(END_TIME_DIALOG_ID);
 			}
 		});
-		
+
 		// 获得当前的日期和时间：
 		final Calendar currentDate = Calendar.getInstance();
 		startYear = endYear = currentDate.get(Calendar.YEAR);
@@ -173,18 +174,18 @@ public class MainActivity extends Activity {
 		startDay = endDay = currentDate.get(Calendar.DAY_OF_MONTH);
 		startHour = endHour = currentDate.get(Calendar.HOUR_OF_DAY);
 		startMin = endMin = currentDate.get(Calendar.MINUTE);
-		
+
 		// 设置文本的内容：
 		startdate.setText(new StringBuilder().append(startYear).append("年").append(startMonth + 1).append("月").append(startDay).append("日"));
 		enddate.setText(new StringBuilder().append(endYear).append("年").append(endMonth + 1).append("月").append(endDay).append("日"));
 		starttime.setText(new StringBuilder().append(pad(startHour)).append(":").append(pad(startMin)));
 		endtime.setText(new StringBuilder().append(pad(endHour)).append(":").append(pad(endMin)));
-		
+
 		// 创建选择教室号的MultiSpinnerActivity
 		classroomNoButton = (Button) findViewById(R.id.classroomnobtn);
 		classroomNoButton.setText("全部    ▼");
 		classroomNoButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -203,7 +204,7 @@ public class MainActivity extends Activity {
 		classroomNoOfPeopleButton = (Button) findViewById(R.id.classroomnoofpeoplebtn);
 		classroomNoOfPeopleButton.setText("全部    ▼");
 		classroomNoOfPeopleButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -217,12 +218,12 @@ public class MainActivity extends Activity {
 				startActivityForResult(classroomNoOfPeopleSelectionIntent, CLS_NO_OF_P_SELECT_CODE);
 			}
 		});
-		
+
 		// 创建选择教室类型的MySpinner
 		classroomTypeButton = (Button) findViewById(R.id.classroomtypebtn);
 		classroomTypeButton.setText("全部    ▼");
 		classroomTypeButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -248,28 +249,28 @@ public class MainActivity extends Activity {
 				classroomstatus = (position == 1)?false:true;
 				Log.v("test", ""+classroomstatus);
 			}
-			
+
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				classroomstatus = true;
             }
 		});
-		
+
 		//点击“搜索”转到结果页，应该为点击搜索向后台传值，值返回后startActivity，之后再修改吧
 		Button search = (Button) findViewById(R.id.searchbtn);
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View arg0) {				
+			public void onClick(View arg0) {
 				//给后台传值
 				Map<String,ArrayList<String>> search = new HashMap<String,ArrayList<String>>();
 				search.put("ClassroomName", checked_classroomnolist);
 				search.put("NumRange", checked_classroomnoofpeoplelist);
 				search.put("type", checked_classroomtypelist);
 				Map<String, ArrayList<String>> result_search = (new checkAndSearch()).checkMap(search,dbManager);
-				
+
 				//构造query，duration那里只是简单算了一下，可能会把没超天数的算超了，大家要是觉得不行我再做精细点 @猩猩@阳哥@申哥@猪头
 				String startDate_String = Integer.toString(startYear) + ((startMonth+1)>=10?"":"0") + Integer.toString(startMonth+1) + (startDay>=10?"":"0") + Integer.toString(startDay);
-				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay);
+				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay) + 1;
 				String startTime_String = (startHour>=10?"":"0") + Integer.toString(startHour) + (startMin>=10?"":"0") + Integer.toString(startMin);
 				String endTime_String = (endHour>=10?"":"0") + Integer.toString(endHour) + (endMin>=10?"":"0") + Integer.toString(endMin);
 				ArrayList<String> roomId = (new checkAndSearch()).NameToID(result_search.get("ClassroomName"),dbManager);
@@ -279,7 +280,7 @@ public class MainActivity extends Activity {
 				//Log.v("test",startTime_String);
 				//Log.v("test",endTime_String);
 				boolean isAvaliable = classroomstatus;
-				
+
 				if(startHour>endHour||(startHour==endHour&&startMin>=endMin)) {
 					Toast.makeText(getApplicationContext(), "开始时间应早于结束时间", Toast.LENGTH_SHORT).show();
 					return;
@@ -288,17 +289,21 @@ public class MainActivity extends Activity {
 					Toast.makeText(getApplicationContext(), "查询日期过长", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
 				//加载中
 				MainActivity.this.dialogLoading.show();
 
 				query userQuery = new query(startDate_String, duration_int, startTime_String, endTime_String, roomId, type, number, isAvaliable);
 
 				// 测试是否连接到网络,testNetworkConn()需要放进MainActivity里面
-				testNetworkConn(userQuery);
+				try {
+					testNetworkConn(userQuery);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				//dbManager.printDB();
 				//re = dbManager.fetchResult(userQuery);
-				
+
 				//以下这些转移到了HttpTask中
 //				//给Results传值
 //				Intent searchToResult = new Intent(MainActivity.this, Results.class);
@@ -309,15 +314,15 @@ public class MainActivity extends Activity {
 //				startActivity(searchToResult);
 			}
 		});
-		
+
 		//点击“历史查询”转到历史查询页，应该为点击搜索向后台传值，值返回后startActivity，之后再修改吧;而且这里还没实现调到历史结果那个tab，建议删了这个Button
 		Button historical_search = (Button) findViewById(R.id.hissearchbtn);
 		historical_search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				//给后台传值
-				
-				
+
+
 				//给Results传值，待补全
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
 				Bundle toPresent = new Bundle();
@@ -327,7 +332,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -407,8 +412,8 @@ public class MainActivity extends Activity {
 					.append(":").append(pad(endMin)));
 		}
 	};
-	
-	
+
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if(requestCode == CLS_NO_SELECT_CODE && resultCode == CLS_NO_SELECT_CODE) {
@@ -432,30 +437,30 @@ public class MainActivity extends Activity {
 		for_NO.put("ClassroomName", all_classroomnolist);
 		for_NO.put("NumRange", checked_classroomnoofpeoplelist);
 		for_NO.put("type", checked_classroomtypelist);
-		
+
 		Map<String,ArrayList<String>> for_NOP = new HashMap<String,ArrayList<String>>();
 		for_NOP.put("ClassroomName", checked_classroomnolist);
 		for_NOP.put("NumRange", all_classroomnoofpeoplelist);
 		for_NOP.put("type", checked_classroomtypelist);
-		
+
 		Map<String,ArrayList<String>> for_Type = new HashMap<String,ArrayList<String>>();
 		for_Type.put("ClassroomName", checked_classroomnolist);
 		for_Type.put("NumRange", checked_classroomnoofpeoplelist);
 		for_Type.put("type", all_classroomtypelist);
-		
+
 		//上述每个包向数据库查询1次，共返回3个包；除了no，noOfPeople，type之外其他的属性都是all
 		Map<String, ArrayList<String>> result_NO = (new checkAndSearch()).checkMap(for_NO,dbManager);
 		Map<String, ArrayList<String>> result_NOP = (new checkAndSearch()).checkMap(for_NOP,dbManager);
 		Map<String, ArrayList<String>> result_Type = (new checkAndSearch()).checkMap(for_Type,dbManager);
-		
+
 		//根据返回的3个包更新3个要显示的list
 		classroomnolist = new ArrayList<String>(result_NO.get("ClassroomName"));
 		classroomnoofpeoplelist = new ArrayList<String>(result_NOP.get("NumRange"));
-		classroomtypelist = new ArrayList<String>(result_Type.get("type"));		
+		classroomtypelist = new ArrayList<String>(result_Type.get("type"));
 	}
-	
+
 	//
-	private void testNetworkConn(query userQuery) {
+	private void testNetworkConn(query userQuery) throws ParseException {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
@@ -480,6 +485,6 @@ public class MainActivity extends Activity {
 		dbManager.clean();
 		dbManager.close();
 	}
-	
-	
+
+
 }

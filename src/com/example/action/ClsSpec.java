@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.DBManager;
+import dao.HttpHelper;
 import domain.Record;
 import domain.ResultDetails;
 import domain.query;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ClsSpec extends Activity {
+	
+	private static DBManager dbMgr;
+	
 	// 测试数据
 	private String classroomNoText = new String("舜德101");
 	private String classroomTypeText = new String("讨论间");
@@ -73,7 +77,12 @@ public class ClsSpec extends Activity {
 			item.put("spec_person", rec.get(i).getPersonName());
 			item.put("spec_school", rec.get(i).getDepartment());
 			item.put("spec_date", date); //格式需要再改
-			item.put("spec_time", rec.get(i).getStartTime().substring(0, 1) + ":" + rec.get(i).getStartTime().substring(2, 3) + "-" + rec.get(i).getEndTime().substring(0, 1) + ":" + rec.get(i).getEndTime().substring(2, 3));
+			String rec_time = rec.get(i).getStartTime().substring(0, 2) + ":" + rec.get(i).getStartTime().substring(2, 4) + "-" + rec.get(i).getEndTime().substring(0, 2) + ":" + rec.get(i).getEndTime().substring(2, 4);
+			if (rec_time.equals("00:00-00:00"))
+				item.put("spec_time", "无");
+			else
+				item.put("spec_time", rec_time);
+			//item.put("spec_time", rec.get(i).getStartTime().substring(0, 1) + ":" + rec.get(i).getStartTime().substring(2, 3) + "-" + rec.get(i).getEndTime().substring(0, 1) + ":" + rec.get(i).getEndTime().substring(2, 3));
 			item.put("spec_usage", rec.get(i).getContent());
 			specItems.add(item);
 		}
@@ -120,5 +129,9 @@ public class ClsSpec extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public static void setDbMgr(DBManager dbMgr) {
+		ClsSpec.dbMgr = dbMgr;
 	}
 }

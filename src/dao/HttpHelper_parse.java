@@ -50,9 +50,9 @@ public class HttpHelper_parse implements Runnable {
 				ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
 				String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 				String recordDate = new dealWithUrl().getDate(queryUrl);
-				//Log.v("url cnt", recordRoomId + recordDate);
-				String bestAvailableStartTime = "";
-				String bestAvailableEndTime = "";
+				Log.v("helper_parse", recordRoomId + recordDate);
+				String bestAvailableStartTime = "0000";
+				String bestAvailableEndTime = "0000";
 				String lastRecordEndTime = "";
 				String bestOverlap = "0000";
 				int recordNum = 1;
@@ -60,7 +60,7 @@ public class HttpHelper_parse implements Runnable {
 				
 				//synchronized (lock) {
 					//Log.v("before doc",queryUrl);
-					doc = Jsoup.connect(queryUrl).get();
+					doc = Jsoup.connect(queryUrl).timeout(0).get();
 				//}
 				String recordType = doc.getElementsByTag("result").text();
 
@@ -149,14 +149,15 @@ public class HttpHelper_parse implements Runnable {
 				if (bestAvailableStartTime==null)
 				{
 					Log.w("bestAvailableStartTime", "null!!!!!!!!!!!!");
-					bestAvailableStartTime="";
+					bestAvailableStartTime="0000";
 				}
 				if (bestAvailableEndTime==null)
-					bestAvailableEndTime="";
+					bestAvailableEndTime="0000";
 
 				RecordForDao.setSharedValues(recordRoomId, recordDate, bestOverlap,
 						bestOverlapFloat, bestAvailableStartTime,
 						bestAvailableEndTime);
+
 //				System.out.println(RecordForDao.getRecordRoomId() + ";"
 //						+ RecordForDao.getRecordDate() + ";"
 //						+ RecordForDao.getBestOverlap() + ";"
@@ -168,7 +169,7 @@ public class HttpHelper_parse implements Runnable {
 				//}
 				//Log.v("db", "print");
 				//dbMgr.printDB();
-				Log.v("db", "end insert into db");
+//				Log.v("db", "end insert into db");
 				// break;
 			}
 		} catch (IOException e) {
