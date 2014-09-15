@@ -33,13 +33,13 @@
     		</LinearLayout>
 
 			<LinearLayout 
-    			android:id="@+id/historical_results"
+    			android:id="@+id/historical_querys"
     			android:layout_width="fill_parent"
     			android:layout_height="fill_parent"
     			android:orientation="vertical" >
     				
     			<ListView
-       				android:id="@+id/historical_resultsList"
+       				android:id="@+id/historical_querysList"
        				android:layout_width="match_parent"
         			android:layout_height="wrap_content" >
     			</ListView>

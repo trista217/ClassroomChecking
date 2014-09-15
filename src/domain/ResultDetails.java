@@ -104,7 +104,7 @@ public class ResultDetails implements Parcelable{
 			rd.setRoom(in.readString());
 			rd.setType(in.readString());
 			rd.setClassroomName(in.readString());
-			rd.setClassroomName(in.readString());
+			rd.setNum(in.readString());
 			rd.setRecordList(in.createTypedArrayList(Record.CREATOR));
 			return rd;
 		}

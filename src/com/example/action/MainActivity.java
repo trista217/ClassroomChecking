@@ -2,13 +2,13 @@ package com.example.action;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import service_impl.checkAndSearch;
 import util.DBManager;
+import util.dealWithTime;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -33,6 +33,7 @@ import android.widget.Toast;
 import dao.HttpHelper;
 import dao.HttpTask;
 import dao.generateQueryUrl;
+import domain.DataPerQuery;
 import domain.QueryAndUrlsForAsync;
 import domain.query;
 
@@ -67,30 +68,21 @@ public class MainActivity extends Activity {
 
 	//教室号MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomNoButton;
-	private String[] classroomnoarray ={"﻿伟伦504","伟伦505","伟伦506","伟伦507","伟伦254","舜德404","伟伦120","伟伦362","伟伦363 ","舜德403A","舜德403B","伟伦122","伟伦247","伟伦424","伟伦128","舜德402A","舜德402B","舜德405","舜德406","舜德407","舜德408","舜德204","伟伦415","舜德112","舜德223","舜德306","伟伦110","伟伦248","伟伦385","伟伦412","伟伦453","伟伦305","伟伦232","伟伦512","伟伦205","舜德220","舜德116","伟伦335","伟伦336","伟伦406","伟伦407","舜德325（二段）","舜德325","舜德325（一段）","伟伦404","伟伦513","舜德215","伟伦401","伟伦405","伟伦511","舜德101","伟伦501","伟伦502","伟伦503","舜德102","舜德201","舜德202","舜德301","舜德302","伟伦508","伟伦409","舜德401","伟伦121","舜德418","舜德楼大厅"};
-	private String[] all_classroomnoarray ={"﻿伟伦504","伟伦505","伟伦506","伟伦507","伟伦254","舜德404","伟伦120","伟伦362","伟伦363 ","舜德403A","舜德403B","伟伦122","伟伦247","伟伦424","伟伦128","舜德402A","舜德402B","舜德405","舜德406","舜德407","舜德408","舜德204","伟伦415","舜德112","舜德223","舜德306","伟伦110","伟伦248","伟伦385","伟伦412","伟伦453","伟伦305","伟伦232","伟伦512","伟伦205","舜德220","舜德116","伟伦335","伟伦336","伟伦406","伟伦407","舜德325（二段）","舜德325","舜德325（一段）","伟伦404","伟伦513","舜德215","伟伦401","伟伦405","伟伦511","舜德101","伟伦501","伟伦502","伟伦503","舜德102","舜德201","舜德202","舜德301","舜德302","伟伦508","伟伦409","舜德401","伟伦121","舜德418","舜德楼大厅","其他"};
-	private String[] checked_classroomnoarray ={"﻿伟伦504","伟伦505","伟伦506","伟伦507","伟伦254","舜德404","伟伦120","伟伦362","伟伦363 ","舜德403A","舜德403B","伟伦122","伟伦247","伟伦424","伟伦128","舜德402A","舜德402B","舜德405","舜德406","舜德407","舜德408","舜德204","伟伦415","舜德112","舜德223","舜德306","伟伦110","伟伦248","伟伦385","伟伦412","伟伦453","伟伦305","伟伦232","伟伦512","伟伦205","舜德220","舜德116","伟伦335","伟伦336","伟伦406","伟伦407","舜德325（二段）","舜德325","舜德325（一段）","伟伦404","伟伦513","舜德215","伟伦401","伟伦405","伟伦511","舜德101","伟伦501","伟伦502","伟伦503","舜德102","舜德201","舜德202","舜德301","舜德302","伟伦508","伟伦409","舜德401","伟伦121","舜德418","舜德楼大厅", "其他"};
-	private ArrayList<String> classroomnolist = new ArrayList<String>(Arrays.asList(classroomnoarray));//所有会显示的项目的集合
-	private ArrayList<String> all_classroomnolist = new ArrayList<String>(Arrays.asList(all_classroomnoarray));//所有项目集合
-	private ArrayList<String> checked_classroomnolist = new ArrayList<String>(Arrays.asList(checked_classroomnoarray));//用户已勾选项目
+	private ArrayList<String> classroomnolist = new ArrayList<String>();//所有会显示的项目的集合
+	private ArrayList<String> all_classroomnolist = new ArrayList<String>();//所有项目集合
+	private ArrayList<String> checked_classroomnolist = new ArrayList<String>();//用户已勾选项目
 
 	//教室人数MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomNoOfPeopleButton;
-	private String[] classroomnoofpeoplearray ={"1-20", "21-50", "51-100","101及以上"  };
-	private String[] all_classroomnoofpeoplearray ={"1-20", "21-50", "51-100","101及以上"  };
-	private String[] checked_classroomnoofpeoplearray ={"1-20", "21-50", "51-100","101及以上" };
-	private ArrayList<String> classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(classroomnoofpeoplearray));
-	private ArrayList<String> all_classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(all_classroomnoofpeoplearray));
-	private ArrayList<String> checked_classroomnoofpeoplelist = new ArrayList<String>(Arrays.asList(checked_classroomnoofpeoplearray));
+	private ArrayList<String> classroomnoofpeoplelist = new ArrayList<String>();
+	private ArrayList<String> all_classroomnoofpeoplelist = new ArrayList<String>();
+	private ArrayList<String> checked_classroomnoofpeoplelist = new ArrayList<String>();
 
 	//教室类型MultiSpinnerActivity，三个String[]在所有代码合并之后应initiate为全部
 	Button classroomTypeButton;
-	private String[] classroomtypearray = {"﻿MBA讨论室","报告厅","博士生讨论室","大厅","多功能厅","会议室","活动室","教师休息室","教室","接待室","实验室","讨论室"};
-	private String[] all_classroomtypearray = {"﻿MBA讨论室","报告厅","博士生讨论室","大厅","多功能厅","会议室","活动室","教师休息室","教室","接待室","实验室","讨论室"};
-	private String[] checked_classroomtypearray = {"﻿MBA讨论室","报告厅","博士生讨论室","大厅","多功能厅","会议室","活动室","教师休息室","教室","接待室","实验室","讨论室" };
-	private ArrayList<String> classroomtypelist = new ArrayList<String>(Arrays.asList(classroomtypearray));
-	private ArrayList<String> all_classroomtypelist = new ArrayList<String>(Arrays.asList(all_classroomtypearray));
-	private ArrayList<String> checked_classroomtypelist = new ArrayList<String>(Arrays.asList(checked_classroomtypearray));
+	private ArrayList<String> classroomtypelist = new ArrayList<String>();
+	private ArrayList<String> all_classroomtypelist = new ArrayList<String>();
+	private ArrayList<String> checked_classroomtypelist = new ArrayList<String>();
 
 	//status
 	private String[] classroomstatusarray = { "空闲", "占用" };
@@ -98,16 +90,24 @@ public class MainActivity extends Activity {
 
 	//数据库
 	private DBManager dbManager;
-	private domain.Results re;
 
 	//加载中
 	HkDialogLoading dialogLoading;
+	
+	//Time Operator
+	dealWithTime d = new dealWithTime();
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		Log.v("START", "********!!!!!!!!!****$$$$$$$$$$$$@@@@@@@@");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//设置结果页
+		Results.setDataPerQueries(new ArrayList<DataPerQuery>());
 
 		dbManager = new DBManager(this);
 		//将dbMgr传入HttpHelper及HttpTask
@@ -116,8 +116,22 @@ public class MainActivity extends Activity {
 
 		//清理数据库
 		dbManager.clean();
-		//Log.v("clean database", "clean!!!!!!!!!!!");
 
+		//init data
+		classroomnolist = dbManager.getfull("ClassroomName").get("ClassroomName");//所有会显示的项目的集合
+		all_classroomnolist = dbManager.getfull("ClassroomName").get("ClassroomName");//所有项目集合
+		checked_classroomnolist = dbManager.getfull("ClassroomName").get("ClassroomName");//用户已勾选项目
+		
+		classroomnoofpeoplelist = dbManager.getfull("NumRange").get("NumRange");
+		all_classroomnoofpeoplelist = dbManager.getfull("NumRange").get("NumRange");
+		checked_classroomnoofpeoplelist = dbManager.getfull("NumRange").get("NumRange");
+		
+		classroomtypelist = dbManager.getfull("type").get("type");
+		all_classroomtypelist = dbManager.getfull("type").get("type");
+		checked_classroomtypelist = dbManager.getfull("type").get("type");
+		
+		
+		
 		dialogLoading = new HkDialogLoading(MainActivity.this);
 
 		startdate = (EditText) findViewById(R.id.startdateDisplay);
@@ -270,22 +284,28 @@ public class MainActivity extends Activity {
 
 				//构造query，duration那里只是简单算了一下，可能会把没超天数的算超了，大家要是觉得不行我再做精细点 @猩猩@阳哥@申哥@猪头
 				String startDate_String = Integer.toString(startYear) + ((startMonth+1)>=10?"":"0") + Integer.toString(startMonth+1) + (startDay>=10?"":"0") + Integer.toString(startDay);
-				int duration_int = (endYear - startYear) * 365 + (endMonth - startMonth) * 31 + (endDay - startDay) + 1;
+				String endDate_String = Integer.toString(endYear) + ((endMonth+1)>=10?"":"0") + Integer.toString(endMonth+1) + (endDay>=10?"":"0") + Integer.toString(endDay);
+				int duration_int;
+				try {
+					duration_int = d.calDateDuration(startDate_String, endDate_String);
+					Log.v("duration", duration_int + "");
+				} catch(Exception e) {
+					e.printStackTrace();
+					Toast.makeText(getApplicationContext(), "日期格式有误", Toast.LENGTH_SHORT).show();
+					return;
+				}
 				String startTime_String = (startHour>=10?"":"0") + Integer.toString(startHour) + (startMin>=10?"":"0") + Integer.toString(startMin);
 				String endTime_String = (endHour>=10?"":"0") + Integer.toString(endHour) + (endMin>=10?"":"0") + Integer.toString(endMin);
 				ArrayList<String> roomId = (new checkAndSearch()).NameToID(result_search.get("ClassroomName"),dbManager);
 				ArrayList<String> type = result_search.get("type");
 				ArrayList<String> number = result_search.get("NumRange");
-				//Log.v("test",startDate_String);
-				//Log.v("test",startTime_String);
-				//Log.v("test",endTime_String);
 				boolean isAvaliable = classroomstatus;
 
 				if(startHour>endHour||(startHour==endHour&&startMin>=endMin)) {
 					Toast.makeText(getApplicationContext(), "开始时间应早于结束时间", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(duration_int>7) { //测试的时候先设成这个，最后再做调整
+				if(duration_int>7) { 
 					Toast.makeText(getApplicationContext(), "查询日期过长", Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -301,17 +321,6 @@ public class MainActivity extends Activity {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				//dbManager.printDB();
-				//re = dbManager.fetchResult(userQuery);
-
-				//以下这些转移到了HttpTask中
-//				//给Results传值
-//				Intent searchToResult = new Intent(MainActivity.this, Results.class);
-//				Bundle toPresent = new Bundle();
-//				toPresent.putInt("tab", 0);
-//				toPresent.putSerializable("results", re);
-//				searchToResult.putExtras(toPresent);
-//				startActivity(searchToResult);
 			}
 		});
 
@@ -320,10 +329,7 @@ public class MainActivity extends Activity {
 		historical_search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				//给后台传值
-
-
-				//给Results传值，待补全
+				//给Results传tab
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
 				Bundle toPresent = new Bundle();
 				toPresent.putInt("tab", 1);
@@ -452,7 +458,7 @@ public class MainActivity extends Activity {
 		Map<String, ArrayList<String>> result_NO = (new checkAndSearch()).checkMap(for_NO,dbManager);
 		Map<String, ArrayList<String>> result_NOP = (new checkAndSearch()).checkMap(for_NOP,dbManager);
 		Map<String, ArrayList<String>> result_Type = (new checkAndSearch()).checkMap(for_Type,dbManager);
-
+		
 		//根据返回的3个包更新3个要显示的list
 		classroomnolist = new ArrayList<String>(result_NO.get("ClassroomName"));
 		classroomnoofpeoplelist = new ArrayList<String>(result_NOP.get("NumRange"));
@@ -474,7 +480,6 @@ public class MainActivity extends Activity {
 		} else {
 			Toast.makeText(getApplicationContext(), "No network connection!",
 					Toast.LENGTH_LONG).show();
-//			postResult.setText("No network connection!");
 		}
 	}
 

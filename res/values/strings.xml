@@ -34,5 +34,17 @@
     <string name="title_activity_cls_spec">ClsSpec</string>
     <string name="action_share">分享到微信</string>
     <string name="bestOverlapText">最长可用时间：</string>
+    
+    <string name="his_date">日期：</string>
+    <string name="his_duration">查询天数：</string>
+    <string name="his_time">时间：</string>
+    <string name="his_roomid">教室：</string>
+    <string name="his_type">教室类型：</string>
+    <string name="his_number">教室人数：</string>
+    <string name="his_availability">教室状态：</string>
+    <string name="title_activity_his_results">历史查询结果</string>
+    <string name="title_activity_his__cls_spec">结果详情</string>
+    
+    <string name="youtui_appId">1</string>
 
 </resources>

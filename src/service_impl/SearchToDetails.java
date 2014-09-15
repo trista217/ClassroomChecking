@@ -1,29 +1,26 @@
 package service_impl;
 
-import java.text.ParseException;
-
 import util.DBManager;
-import util.dealWithTime;
+import android.util.Log;
 import domain.ResultDetails;
-import domain.query;
 
 public class SearchToDetails {
 
-	public ResultDetails toDetails(query q, String roomID ,DBManager dbManager)
-	{
+	public ResultDetails toDetails(String date, String roomID,
+			DBManager dbManager) {
 		ResultDetails result = new ResultDetails();
 		result.setRoom(roomID);
-		result.setClassroomName(dbManager.RoomInfoByRoomID("ClassroomName", roomID));
+		result.setClassroomName(dbManager.RoomInfoByRoomID("ClassroomName",
+				roomID));
+		Log.v("ClassroomName",
+				dbManager.RoomInfoByRoomID("ClassroomName", roomID));
 		result.setNum(dbManager.RoomInfoByRoomID("num", roomID));
+		Log.v("num", dbManager.RoomInfoByRoomID("num", roomID));
 		result.setType(dbManager.RoomInfoByRoomID("type", roomID));
-		String endDate = "99999999";
-		try {
-			endDate = (new dealWithTime()).dateIncrement(q.getStartDate(), q.getDuration());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		result.setRecordList(dbManager.RoomDateToRecordList(roomID, q.getStartDate(), endDate));
-		
+		Log.v("type", dbManager.RoomInfoByRoomID("type", roomID));
+
+		result.setRecordList(dbManager.RoomDateToRecordList(roomID, date));
+
 		return result;
 	}
 }

@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import util.DBManager;
 import util.dealWithTime;
 import util.dealWithUrl;
-import android.util.Log;
 import domain.RecordForDao;
 import domain.query;
 
@@ -21,63 +20,54 @@ public class HttpHelper_parse implements Runnable {
 	private static DBManager dbMgr;
 	private query userQuery;
 	private ArrayList<String> queryUrlList;
-	private static int flag=0;
-	//private static Object lock = new Object();
-	
-	public HttpHelper_parse()
-	{
+	private static int flag = 0;
+
+	public HttpHelper_parse() {
 		super();
 	}
-	
-	public HttpHelper_parse(query userQuery,ArrayList<String> queryUrlList) {
+
+	public HttpHelper_parse(query userQuery, ArrayList<String> queryUrlList) {
 		super();
 		this.userQuery = userQuery;
 		this.queryUrlList = queryUrlList;
 	}
 
-
-
 	@Override
-	public void run(){
+	public void run() {
 		// TODO Auto-generated method stub
 
-		
 		dealWithTime timeDealer = new dealWithTime();
-		//Log.v("httphelper_parse","before for");
 		try {
 			for (String queryUrl : queryUrlList) {
 
 				ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
 				String recordRoomId = new dealWithUrl().getRmId(queryUrl);
 				String recordDate = new dealWithUrl().getDate(queryUrl);
-				Log.v("helper_parse", recordRoomId + recordDate);
 				String bestAvailableStartTime = "0000";
 				String bestAvailableEndTime = "0000";
 				String lastRecordEndTime = "";
 				String bestOverlap = "0000";
 				int recordNum = 1;
 				Document doc = null;
-				
-				//synchronized (lock) {
-					//Log.v("before doc",queryUrl);
-					doc = Jsoup.connect(queryUrl).timeout(0).get();
-				//}
+
+				doc = Jsoup.connect(queryUrl).timeout(0).get();
 				String recordType = doc.getElementsByTag("result").text();
 
-				//Log.v("recordType", "recodeType");
 				if (recordType.equals("占用")) {
 					Elements records = doc.getElementsByTag("record");
 					for (Element record : records) {
-						// String recordDate
+
 						String recordOverlap;
-						String recordName = record.getElementsByTag("name").text();
+						String recordName = record.getElementsByTag("name")
+								.text();
 						String recordDepartment = record.getElementsByTag(
 								"department").text();
-						String recordStartTime = record.getElementsByTag("start")
-								.text().replaceAll(":", "");
+						String recordStartTime = record
+								.getElementsByTag("start").text()
+								.replaceAll(":", "");
 						if (recordNum == 1) {
-							if (timeDealer.compareTime(userQuery.getStartTime(),
-									recordStartTime)) {
+							if (timeDealer.compareTime(
+									userQuery.getStartTime(), recordStartTime)) {
 								// 若第一条记录开始时间在用户查询起始时间之前，则第一条记录overlap为0000
 								recordOverlap = "0000";
 							} else {
@@ -86,8 +76,8 @@ public class HttpHelper_parse implements Runnable {
 										recordStartTime, lastRecordEndTime);
 							}
 						} else {
-							recordOverlap = timeDealer.calOverlap(recordStartTime,
-									lastRecordEndTime);
+							recordOverlap = timeDealer.calOverlap(
+									recordStartTime, lastRecordEndTime);
 						}
 
 						// 插入空闲条目
@@ -111,8 +101,8 @@ public class HttpHelper_parse implements Runnable {
 						lastRecordEndTime = recordEndTime;
 						String recordState = record.getElementsByTag("state")
 								.text();
-						String recordContent = record.getElementsByTag("content")
-								.text();
+						String recordContent = record.getElementsByTag(
+								"content").text();
 						RecordForDao recordLine = new RecordForDao(recordType,
 								recordStartTime, recordEndTime, recordOverlap,
 								recordName, recordDepartment, recordState,
@@ -144,33 +134,21 @@ public class HttpHelper_parse implements Runnable {
 					recordsList.add(availableRecordLine);
 				}
 
-				float bestOverlapFloat = timeDealer.dateStringToFloat(bestOverlap);
-				
-				if (bestAvailableStartTime==null)
-				{
-					Log.w("bestAvailableStartTime", "null!!!!!!!!!!!!");
-					bestAvailableStartTime="0000";
+				float bestOverlapFloat = timeDealer
+						.dateStringToFloat(bestOverlap);
+
+				if (bestAvailableStartTime == null) {
+					bestAvailableStartTime = "0000";
 				}
-				if (bestAvailableEndTime==null)
-					bestAvailableEndTime="0000";
+				if (bestAvailableEndTime == null)
+					bestAvailableEndTime = "0000";
 
-				RecordForDao.setSharedValues(recordRoomId, recordDate, bestOverlap,
-						bestOverlapFloat, bestAvailableStartTime,
-						bestAvailableEndTime);
-
-//				System.out.println(RecordForDao.getRecordRoomId() + ";"
-//						+ RecordForDao.getRecordDate() + ";"
-//						+ RecordForDao.getBestOverlap() + ";"
-//						+ RecordForDao.getBestAvailableStartTime() + ";"
-//						+ RecordForDao.getBestAvailableEndTime());
-
-				//synchronized (lock) {
-					dbMgr.insertRecordForDao(recordsList);
-				//}
-				//Log.v("db", "print");
-				//dbMgr.printDB();
-//				Log.v("db", "end insert into db");
-				// break;
+				for (RecordForDao recordLine : recordsList) {
+					recordLine.setSharedValues(recordRoomId, recordDate,
+							bestOverlap, bestOverlapFloat,
+							bestAvailableStartTime, bestAvailableEndTime);
+					dbMgr.insertRecordForDao(recordLine);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -178,7 +156,6 @@ public class HttpHelper_parse implements Runnable {
 			e.printStackTrace();
 		}
 		flag++;
-		//Log.v("Thread_flag",""+flag);
 	}
 
 	public static int getFlag() {

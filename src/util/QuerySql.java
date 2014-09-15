@@ -16,7 +16,7 @@ public class QuerySql {
 		// TODO Auto-generated method stub
 		String[] colNames;
 		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-        //�����ݿ�
+
 		Log.v("sqlQuery","sqlQuery");
     	db=dbHelper.getWritableDatabase();
 		Log.v("before sql query", "*************");
@@ -25,7 +25,7 @@ public class QuerySql {
 		Log.v("after sql", colNames.toString());
 		for(int i=0;i<colNames.length;i++)
 		{
-			c.moveToFirst();//��һ��
+			c.moveToFirst();
 			ArrayList<String> fieldsValue=new ArrayList<String>();
 			for(int j=0;j<c.getCount();j++)
 			{

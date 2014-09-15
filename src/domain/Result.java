@@ -35,9 +35,10 @@ public class Result implements Parcelable{
 		String ClassroomName;
 		if (room.equals("SDDT"))
 			ClassroomName = "舜德大厅";
-		else
+		else if(room.startsWith("SD"))
 		{
 			ClassroomName = room.replaceAll("SD", "舜德");
+		}else {
 			ClassroomName = room.replaceAll("WL", "伟伦");
 		}
 		return ClassroomName;

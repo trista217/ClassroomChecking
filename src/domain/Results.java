@@ -20,6 +20,11 @@ public class Results implements Parcelable{
 		super();
 	}
 	
+	public Results(Results re) {
+		this.q = new query(re.getQuery());
+		this.resultList = new ArrayList<Result>(re.getAllResult());
+	}
+	
 	public Results(query q, ArrayList<Result> resultList)
 	{
 		//this.q = q; 这里确定不会出bug？我改了一下，要是没冲突就用我的吧

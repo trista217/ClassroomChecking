@@ -1,12 +1,14 @@
 package domain;
+
+
 public class RecordForDao {
 
-	private static String recordRoomId;
-	private static String recordDate;
-	private static String bestOverlap;
-	private static float bestOverlapFloat;
-	private static String bestAvailableStartTime;
-	private static String bestAvailableEndTime;
+	private String recordRoomId;
+	private String recordDate;
+	private String bestOverlap;
+	private float bestOverlapFloat;
+	private String bestAvailableStartTime;
+	private String bestAvailableEndTime;
 
 	private String recordType;
 	private String recordStartTime;
@@ -35,8 +37,8 @@ public class RecordForDao {
 		this.recordContent = recordContent;
 	}
 
-	public RecordForDao(String recordStartTime,
-			String recordEndTime, String recordOverlap) {
+	public RecordForDao(String recordStartTime, String recordEndTime,
+			String recordOverlap) {
 
 		this.recordType = "空闲";
 		this.recordStartTime = recordStartTime;
@@ -50,25 +52,40 @@ public class RecordForDao {
 	 * recordDepartment + ";" + recordState + ";" + recordContent;
 	 */
 
-	public static void setSharedValues(String recordRoomId, String recordDate,
-			String bestOverlap, float bestOverlapFloat,String bestAvailableStartTime,
-			String bestAvailableEndTime) {
-		RecordForDao.recordRoomId = recordRoomId;
-		RecordForDao.recordDate = recordDate;
-		RecordForDao.bestOverlap = bestOverlap;
-		RecordForDao.bestOverlapFloat = bestOverlapFloat;
-		RecordForDao.bestAvailableStartTime = bestAvailableStartTime;
-		RecordForDao.bestAvailableEndTime = bestAvailableEndTime;
+	public void setSharedValues(String recordRoomId, String recordDate,
+			String bestOverlap, float bestOverlapFloat,
+			String bestAvailableStartTime, String bestAvailableEndTime) {
+		this.recordRoomId = recordRoomId;
+		this.recordDate = recordDate;
+		this.bestOverlap = bestOverlap;
+		this.bestOverlapFloat = bestOverlapFloat;
+		this.bestAvailableStartTime = bestAvailableStartTime;
+		this.bestAvailableEndTime = bestAvailableEndTime;
 	}
-	
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+
+	public String getRecordRoomId() {
+		return recordRoomId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "record [recordType=" + recordType + ", recordStartTime="
+		return "record [recordRoomId=" + recordRoomId + ", recordDate="
+				+ recordDate + ", bestOverlap=" + bestOverlap
+				+ ", bestOverlapFloat=" + bestOverlapFloat
+				+ ", bestAvailableStartTime=" + bestAvailableStartTime
+				+ ", bestAvailableEndTime=" + bestAvailableEndTime
+				+ ", recordType=" + recordType + ", recordStartTime="
 				+ recordStartTime + ", recordEndTime=" + recordEndTime
 				+ ", recordOverlap=" + recordOverlap + ", recordName="
 				+ recordName + ", recordDepartment=" + recordDepartment
@@ -76,27 +93,23 @@ public class RecordForDao {
 				+ recordContent + "]";
 	}
 
-	public static String getRecordRoomId() {
-		return recordRoomId;
-	}
-
-	public static String getRecordDate() {
+	public String getRecordDate() {
 		return recordDate;
 	}
 
-	public static String getBestOverlap() {
+	public String getBestOverlap() {
 		return bestOverlap;
 	}
-	
-	public static float getBestOverlapFloat() {
+
+	public float getBestOverlapFloat() {
 		return bestOverlapFloat;
 	}
 
-	public static String getBestAvailableStartTime() {
+	public String getBestAvailableStartTime() {
 		return bestAvailableStartTime;
 	}
 
-	public static String getBestAvailableEndTime() {
+	public String getBestAvailableEndTime() {
 		return bestAvailableEndTime;
 	}
 

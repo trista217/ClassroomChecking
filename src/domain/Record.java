@@ -1,6 +1,5 @@
 package domain;
 
-import util.dealWithTime;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,7 +17,6 @@ public class Record implements Parcelable{
 	private String content;
 	private String status;
 	private int _id;
-	private static final dealWithTime d = new dealWithTime();
 	
 	public Record() {
 		super();

@@ -33,7 +33,7 @@ public class HkDialogLoading extends Dialog {
 		anim.setInterpolator(new LinearInterpolator());
 
 		vLoading = new ImageView(context);
-		vLoading.setImageResource(R.drawable.ic_launcher);// 加载中的图片,之后换一个
+		vLoading.setImageResource(R.drawable.ic_action_refresh);// 加载中的图片,之后换一个
 
 		// 布局
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(

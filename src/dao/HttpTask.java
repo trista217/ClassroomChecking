@@ -21,7 +21,7 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	private domain.Results re;
 	private static DBManager dbManager;
 	
-	//传入mainactivity
+	//传入MainActivity
 	private Context context;
 	
 	//传入数据
@@ -39,29 +39,24 @@ public class HttpTask extends AsyncTask<QueryAndUrlsForAsync, Void, String> {
 	@Override
 	protected String doInBackground(QueryAndUrlsForAsync... queryAndUrlsList) {
 		Log.d(DEBUG_TAG, "do in bg");
+		dbManager.clean();
 		// params[0] from excute() is the url
 		queryAndUrls = queryAndUrlsList[0];
-
 		try {
 			Log.d(DEBUG_TAG, "start http helper");
 			HttpHelper.parseUrl(queryAndUrls);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//need to be changed
 		return "do In bg over!";
 	}
 	
-	//need to be changed
 	protected void onPostExecute(String result) {
-		System.out.println(result);
-		
+		System.out.println(result);	
 		//把数据库传下去
 		Results.setDbMgr(dbManager);
-
 		re = dbManager.fetchResult(userQuery);
-		Log.v("database prepared, search for result","re");
-		Log.v("date starttime endtime result",re.getStartDate()+"    "+re.getStartTime()+"    "+re.getEndTime()+"    "+re.getAllResult() /*+ "    " + re.getAllResult().get(0).getNearestUsedTime()*/);
+		Log.v("date starttime endtime result",re.getStartDate()+"    "+re.getStartTime()+"    "+re.getEndTime()+"    "+re.getAllResult());
 		
 		//给Results传值
 		Intent searchToResult = new Intent(context, Results.class);

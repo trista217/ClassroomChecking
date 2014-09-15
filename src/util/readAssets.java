@@ -3,7 +3,6 @@ package util;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 

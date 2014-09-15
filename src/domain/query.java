@@ -1,7 +1,6 @@
 package domain;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,7 +17,9 @@ public class query implements Parcelable{
 	private boolean isAvaliable;
 
 	public query() {
-		super();
+		this.roomId = new ArrayList<String>();
+		this.type = new ArrayList<String>();
+		this.number = new ArrayList<String>();
 	}
 	
 	public query(query q) {
@@ -118,6 +119,23 @@ public class query implements Parcelable{
 		this.isAvaliable = isAvaliable;
 	}
 	
+	public ArrayList<String> getClassroomNameList() {
+		ArrayList<String> ClassroomNameList = new ArrayList<String>();
+		for(String room:roomId) {
+			String ClassroomName = new String();
+			if (room.equals("SDDT"))
+				ClassroomName = "舜德大厅";
+			else if(room.startsWith("SD"))
+			{
+				ClassroomName = room.replaceAll("SD", "舜德");
+			}else {
+				ClassroomName = room.replaceAll("WL", "伟伦");
+			}
+			ClassroomNameList.add(ClassroomName);
+		}
+		return ClassroomNameList;
+	}
+	
 	@Override
 	public int describeContents() {
 		return 0;
@@ -144,9 +162,9 @@ public class query implements Parcelable{
 			q.setDuration(in.readInt());
 			q.setStartTime(in.readString());
 			q.setEndTime(in.readString());
-			q.setRoomId(in.createStringArrayList());
-			q.setRoomId(in.createStringArrayList());
-			q.setRoomId(in.createStringArrayList());
+			q.setRoomId(new ArrayList<String>(in.createStringArrayList()));
+			q.setType(new ArrayList<String>(in.createStringArrayList()));
+			q.setNumber(new ArrayList<String>(in.createStringArrayList()));
 			q.setAvaliable(in.readByte()!=0);
 			return q;
 		}

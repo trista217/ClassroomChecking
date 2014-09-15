@@ -19,7 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MultiSpinnerActivity extends Activity {
 	List<String> bufferlist = new ArrayList<String>();
 	ArrayList<String> m, all, list;
-	Button finish, multiSpinner_all;
+	Button finish, multiSpinner_all, multiSpinner_none;
 	ListView choice;
 	String print;//最终MainActivity显示内容
 	int flag;
@@ -49,7 +49,6 @@ public class MultiSpinnerActivity extends Activity {
 				
 				//设置最终显示内容
 				if(list.size()==0){
-					//print = new String("至少选择一项");
 					Toast.makeText(getApplicationContext(), "请至少选择一项", Toast.LENGTH_SHORT).show();
 					return;
 				}else if(list.size()==all.size()) {
@@ -89,7 +88,7 @@ public class MultiSpinnerActivity extends Activity {
 		
 		//All
 		multiSpinner_all=(Button) findViewById(R.id.myspinner_all);
-		multiSpinner_all.setText("全部");
+		multiSpinner_all.setText("全选");
 		multiSpinner_all.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -102,14 +101,31 @@ public class MultiSpinnerActivity extends Activity {
 					}
 				}
 				bufferlist.clear();
+				bufferlist.addAll(new ArrayList<String>(list));
+			}
+		});
+		
+		//None
+		multiSpinner_none=(Button) findViewById(R.id.myspinner_none);
+		multiSpinner_none.setText("全不选");
+		multiSpinner_none.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				while(bufferlist.size()!=0) {
+					if(m.contains(bufferlist.get(0)))
+						choice.performItemClick(choice, m.indexOf(bufferlist.get(0)), m.indexOf(bufferlist.get(0)));
+					else
+						bufferlist.remove(0);
+				}
+				list.clear();
+				bufferlist.clear();
 				bufferlist.addAll(list);
 			}
 		});
 		
 		//Choice
 		choice.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>
-		(choice.getContext(),android.R.layout.simple_list_item_multiple_choice,m);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String> (choice.getContext(),android.R.layout.simple_list_item_multiple_choice,m);
 		choice.setAdapter(adapter);
 		choice.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -129,7 +145,7 @@ public class MultiSpinnerActivity extends Activity {
 			if(m.contains(list.get(i))) {
 				choice.performItemClick(choice, m.indexOf(list.get(i)), m.indexOf(list.get(i)));
 			}else{
-				bufferlist.add(list.get(i));
+				bufferlist.add(new String(list.get(i)));
 			}
 		}
 	}

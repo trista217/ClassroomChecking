@@ -9,11 +9,9 @@ import java.util.Date;
 
 public class dealWithTime {
 	@SuppressLint("SimpleDateFormat")
-	private static final SimpleDateFormat TIME_SDF = new SimpleDateFormat(
-			"HHmm");
+	private final SimpleDateFormat TIME_SDF = new SimpleDateFormat("HHmm");
 	@SuppressLint("SimpleDateFormat")
-	private static final SimpleDateFormat DATE_SDF = new SimpleDateFormat(
-			"yyyyMMdd");
+	private final SimpleDateFormat DATE_SDF = new SimpleDateFormat("yyyyMMdd");
 
 	public String calOverlap(String timeString1, String timeString2)
 			throws ParseException {
@@ -52,22 +50,23 @@ public class dealWithTime {
 		}
 		return result;
 	}
-	
+
 	public int calDateDuration(String startDateString, String endDateString)
 			throws ParseException {
 		Date startDate = DATE_SDF.parse(startDateString);
 		Date endDate = DATE_SDF.parse(endDateString);
-		Long day = (endDate.getTime() - startDate.getTime()) / 86400000;
-		int duration = Integer.parseInt(String.valueOf(day));
+		long day = (endDate.getTime() - startDate.getTime()) / 86400000;
+		int duration = Integer.parseInt(String.valueOf(day)) + 1;
 		return duration;
 	}
-	
-	public String dateIncrement(String dateString,int i) throws ParseException {
+
+	public String dateIncrement(String dateString, int i) throws ParseException {
 		Date date = DATE_SDF.parse(dateString);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR)+i);
-		return DATE_SDF.format(calendar.getTime());		
+		calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)
+				+ i);
+		return DATE_SDF.format(calendar.getTime());
 	}
 
 	public Date stringToDate(String timeString) {
@@ -85,14 +84,14 @@ public class dealWithTime {
 		timeString = TIME_SDF.format(timeDate);
 		return timeString;
 	}
-	
+
 	public float dateStringToFloat(String timeString) {
-		Long timeLong = calTimeDiff(timeString, "0000"); 
-		int timeHour = (int)(timeLong / (60 * 60 * 1000));
-		int timeMinInt = (int)(timeLong / (1000 * 60) - timeHour * 60);
+		long timeLong = calTimeDiff(timeString, "0000");
+		int timeHour = (int) (timeLong / (60 * 60 * 1000));
+		int timeMinInt = (int) (timeLong / (1000 * 60) - timeHour * 60);
 		float timeMinHour = (float) (timeMinInt / 60.0);
 		timeMinHour = (float) (Math.round(timeMinHour * 100)) / 100;
-		float dateFloat = (float) (timeHour * 1.0 + timeMinHour);		
+		float dateFloat = (float) (timeHour * 1.0 + timeMinHour);
 		return dateFloat;
 	}
 
@@ -104,4 +103,3 @@ public class dealWithTime {
 	}
 
 }
-
