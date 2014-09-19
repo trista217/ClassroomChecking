@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class dealWithTime {
+import utilInter.dealWithTimeInter;
+
+public class dealWithTime implements dealWithTimeInter{
 	@SuppressLint("SimpleDateFormat")
 	private final SimpleDateFormat TIME_SDF = new SimpleDateFormat("HHmm");
 	@SuppressLint("SimpleDateFormat")

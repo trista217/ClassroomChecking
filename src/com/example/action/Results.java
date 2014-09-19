@@ -5,12 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import service_impl.SearchToDetails;
-import util.DBManager;
-import domain.DataPerQuery;
-import domain.Result;
-import domain.ResultDetails;
-import domain.query;
+import service.SearchToDetails;
+import utilInter.DBManagerInter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,14 +17,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
 import android.widget.Toast;
+import cn.bidaround.point.YtLog;
+import cn.bidaround.youtui_template.YouTuiViewType;
+import cn.bidaround.youtui_template.YtTemplate;
+import cn.bidaround.ytcore.ErrorInfo;
+import cn.bidaround.ytcore.YtShareListener;
+import cn.bidaround.ytcore.data.ShareData;
+import cn.bidaround.ytcore.data.YtPlatform;
+import domain.DataPerQuery;
+import domain.Result;
+import domain.ResultDetails;
+import domain.query;
 
 public class Results extends Activity {
 	
-	private static DBManager dbMgr;
+	private static DBManagerInter dbMgr;
 
 	private ArrayList<Result> resultArrayList = new ArrayList<Result>();
 	
@@ -48,6 +56,10 @@ public class Results extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
 		
+		//创建分享模块
+		YtTemplate.init(this);
+		Button btn1 =(Button) findViewById(R.id.action_share);
+		
 		//本次查询结果
 		DataPerQuery currentDataPerQuery = new DataPerQuery();
 		
@@ -59,7 +71,7 @@ public class Results extends Activity {
 		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);  
         tabHost.setup();  
         tabHost.addTab(tabHost.newTabSpec("results").setIndicator("查询结果").setContent(R.id.results));  
-        tabHost.addTab(tabHost.newTabSpec("historical_results").setIndicator("历史查询结果").setContent(R.id.historical_querys));
+        tabHost.addTab(tabHost.newTabSpec("historical_results").setIndicator("历史查询条件").setContent(R.id.historical_querys));
 		
         //处理Intent
         Intent intentFromMain = getIntent();
@@ -68,7 +80,7 @@ public class Results extends Activity {
         	//本次查询结果
         	re = intentFromMain.getParcelableExtra("results");
         	resultArrayList = re.getAllResult();
-        	Log.v("~~~~!!!!!!!@@@@@@#######$$$$$$$$", re.getQuery().getRoomId().get(0));
+        	//Log.v("~~~~!!!!!!!@@@@@@#######$$$$$$$$", re.getQuery().getRoomId().get(0));
         	
         	//本次查询结果
     		currentDataPerQuery.setResults(re);
@@ -80,7 +92,8 @@ public class Results extends Activity {
     		}
     		currentDataPerQuery.setResultDetails(currentDetails);
     		dataPerQueries.add(0, currentDataPerQuery);
-    		Log.v("!!!!!!!@@@@@@#######$$$$$$$$", dataPerQueries.get(0).getResults().getQuery().getRoomId().get(0));
+    		Log.v("add current query result and clean record table","add current query result");
+    		//Log.v("!!!!!!!@@@@@@#######$$$$$$$$", dataPerQueries.get(0).getResults().getQuery().getRoomId().get(0));
         	
         }else {
         	//历史结果
@@ -116,9 +129,9 @@ public class Results extends Activity {
 		
 		//历史查询结果
 		List<Map<String, Object>> historical_queryItems = new ArrayList<Map<String, Object>>();
-		for (int i = 0; i < dataPerQueries.size()-1; i++) {
+		if(flag==1&&dataPerQueries.size()!=0) {
 			Map<String, Object> historical_queryitem = new HashMap<String, Object>();
-			query his_query = new query(dataPerQueries.get(i).getResults().getQuery());
+			query his_query = new query(dataPerQueries.get(0).getResults().getQuery());
 			historical_queryitem.put("historical_query_startDate", his_query.getStartDate().substring(0, 4) + "-" + his_query.getStartDate().substring(4, 6) + "-" +his_query.getStartDate().substring(6, 8));
 			historical_queryitem.put("historical_query_duration", his_query.getDuration());
 			String time_interval = his_query.getStartTime().substring(0, 2) + ":" + his_query.getStartTime().substring(2, 4) + "-" + his_query.getEndTime().substring(0, 2) + ":" + his_query.getEndTime().substring(2, 4);
@@ -132,7 +145,24 @@ public class Results extends Activity {
 			historical_queryitem.put("historical_query_isavaliable", his_query.isAvaliable()?"空闲":"占用");
 			historical_queryItems.add(historical_queryitem);
 		}
-
+		//if (flag==0){
+			for (int i = 1; i < dataPerQueries.size(); i++) {
+				Map<String, Object> historical_queryitem = new HashMap<String, Object>();
+				query his_query = new query(dataPerQueries.get(i).getResults().getQuery());
+				historical_queryitem.put("historical_query_startDate", his_query.getStartDate().substring(0, 4) + "-" + his_query.getStartDate().substring(4, 6) + "-" +his_query.getStartDate().substring(6, 8));
+				historical_queryitem.put("historical_query_duration", his_query.getDuration());
+				String time_interval = his_query.getStartTime().substring(0, 2) + ":" + his_query.getStartTime().substring(2, 4) + "-" + his_query.getEndTime().substring(0, 2) + ":" + his_query.getEndTime().substring(2, 4);
+				if (time_interval.equals("00:00-00:00"))
+					historical_queryitem.put("historical_query_time", "无");
+				else
+					historical_queryitem.put("historical_query_time", time_interval);
+				historical_queryitem.put("historical_query_roomID", his_query.getClassroomNameList().get(0) + ", 共" + his_query.getRoomId().size() + "个");
+				historical_queryitem.put("historical_query_type",  his_query.getType().get(0) + ", 共" + his_query.getType().size() + "个");
+				historical_queryitem.put("historical_query_number", his_query.getNumber().get(0) + ", 共" + his_query.getNumber().size() + "个");
+				historical_queryitem.put("historical_query_isavaliable", his_query.isAvaliable()?"空闲":"占用");
+				historical_queryItems.add(historical_queryitem);
+			//}
+		}
 		SimpleAdapter historical_eachqueryItem = new SimpleAdapter(this, historical_queryItems, R.layout.query_item, 
 				new String[] {"historical_query_startDate", "historical_query_duration", "historical_query_time", "historical_query_roomID", "historical_query_type", "historical_query_number", "historical_query_isavaliable" }, 
 				new int[] {R.id.his_query_result_date, R.id.his_query_result_duration, R.id.his_query_result_time, R.id.his_query_result_roomid, R.id.his_query_result_type, R.id.his_query_result_number, R.id.his_query_result_availability });
@@ -171,9 +201,11 @@ public class Results extends Activity {
 				bundleForHisResults.putParcelable("dataPerQuery", dataPerQueries.get(position));
 				hisQueryToHisResults.putExtras(bundleForHisResults);
 				//跳转
+				Log.v("log:user wants to check history", "show historical results");
 				startActivity(hisQueryToHisResults);
 			}
 		});
+		Log.v("log:results and history page created","results and history page created");
 	}
 	public static ArrayList<DataPerQuery> getDataPerQueries() {
 		return dataPerQueries;
@@ -187,6 +219,13 @@ public class Results extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.result_menu, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	//注销分享模块
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		YtTemplate.release(this);
 	}
 	
 	@Override
@@ -212,13 +251,87 @@ public class Results extends Activity {
 		// 分享按钮效果设定
 		case R.id.results_share:
 			Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
+			
+			String str = "";
+			String besttime = "";
+			for (int i = 0; i < resultArrayList.size() & i<3 ; i++) {
+				str += i+1+"、 教室："+resultArrayList.get(i).getClassroomName()
+						+" 日期：" + resultArrayList.get(i).getDate().substring(0, 4) + "-" + resultArrayList.get(i).getDate().substring(4, 6) + "-" + resultArrayList.get(i).getDate().substring(6, 8)
+						+" 最长空闲时间："+ resultArrayList.get(i).getBestOverlap() 
+						+" 最近空闲时间段：";
+				besttime = resultArrayList.get(i).getBestAvailableStartTime().substring(0, 2) + ":" + resultArrayList.get(i).getBestAvailableStartTime().substring(2, 4) + "-" + resultArrayList.get(i).getBestAvailableEndTime().substring(0, 2) + ":" +resultArrayList.get(i).getBestAvailableEndTime().substring(2, 4);
+				if (besttime.equals("00:00-00:00"))
+					besttime = "无";
+				str += besttime +"; ";
+			}
+			
+				Log.v("查询结果分享","以下为时间最合适的教室："+str);
+			
+			try {
+				// ShareData使用内容分享类型分享类型
+				ShareData whiteViewShareData = new ShareData();
+				whiteViewShareData.isAppShare = false;
+				whiteViewShareData.setDescription("经管学院教室使用情况");
+				whiteViewShareData.setTitle("经管学院教室使用情况");
+				whiteViewShareData.setText("以下为时间最合适的教室："+str);
+				//whiteViewShareData.setTarget_url("http://apk.hiapk.com/html/2014/06/2770934.html?module=256&info=HHNmjwdo");
+				whiteViewShareData.setImageUrl("http://youtui.oss-cn-hangzhou.aliyuncs.com/AppLogo/ic_launcher.png"); 
+				YtTemplate whiteGridTemplate = new YtTemplate(Results.this, YouTuiViewType.BLACK_POPUP, false);
+				whiteGridTemplate.setShareData(whiteViewShareData);
+				YtShareListener whiteViewListener = new YtShareListener() {
+				@Override
+				public void onSuccess(ErrorInfo error) {
+				YtLog.e("----", error.getErrorMessage());      
+				}
+				@Override
+				public void onPreShare() {
+				}
+				@Override
+				public void onError(ErrorInfo error) {
+				YtLog.e("----", error.getErrorMessage());      
+				}
+				@Override
+				public void onCancel() {
+				}
+				};
+				/** 添加分享结果监听,如果开发者不需要处理回调事件则不必设置 */
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_QQ, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_QZONE, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_RENN, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_SINAWEIBO, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_TENCENTWEIBO, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_WECHAT, whiteViewListener);
+				whiteGridTemplate.addListener(YtPlatform.PLATFORM_WECHATMOMENTS, whiteViewListener);
+				/**
+				 * 为每个平台添加分享数据,如果不单独添加,分享的为whiteViewTemplate.setShareData(
+				 * whiteViewShareData)设置的分享数据
+				 */
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_QQ, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_QZONE, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_RENN, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_SINAWEIBO, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_TENCENTWEIBO, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_WECHAT, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_WECHATMOMENTS, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_MESSAGE, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_EMAIL, whiteViewShareData);
+				whiteGridTemplate.addData(YtPlatform.PLATFORM_MORE_SHARE, whiteViewShareData);
+				  
+				whiteGridTemplate.show();
+				 
+				 
+				} catch (Exception e) {
+				 e.printStackTrace();
+				 
+				}
+			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 	
-	public static void setDbMgr(DBManager dbMgr) {
+	public static void setDbMgr(DBManagerInter dbMgr) {
 		Results.dbMgr = dbMgr;
 	}
 	

@@ -1,6 +1,8 @@
 package util;
 
-public class dealWithUrl {
+import utilInter.dealWithUrlInter;
+
+public class dealWithUrl implements dealWithUrlInter{
 
 	public String getRmId(String url) {
 		url = url.substring(115);

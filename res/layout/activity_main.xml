@@ -1,6 +1,13 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp">
+    
+    
+
+<GridLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:columnCount="2">
     
     <TextView
@@ -9,7 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_row="0"
         android:layout_column="0"
-        android:text="@string/startdate" />
+        android:textSize="16sp"
+        android:text="@string/startdate"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="6dp" />
     
     <EditText
         android:id="@+id/startdateDisplay"
@@ -18,7 +28,9 @@
         android:layout_row="0"
         android:layout_column="1"
         android:cursorVisible="false"
-        android:editable="false" />
+        android:editable="false"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="6dp" />
     
     <TextView
         android:id="@+id/enddate"
@@ -26,7 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_row="1"
         android:layout_column="0"
-        android:text="@string/enddate" />
+        android:textSize="16sp"
+        android:text="@string/enddate"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/enddateDisplay"
@@ -35,7 +49,8 @@
         android:layout_row="1"
         android:layout_column="1"
         android:cursorVisible="false"
-        android:editable="false" />
+        android:editable="false"
+        android:layout_marginBottom="6dp" />
     
     <TextView
         android:id="@+id/starttime"
@@ -43,7 +58,9 @@
         android:layout_height="wrap_content"
         android:layout_row="2"
         android:layout_column="0"
-        android:text="@string/starttime" />
+        android:textSize="16sp"
+        android:text="@string/starttime"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/starttimeDisplay"
@@ -52,7 +69,8 @@
         android:layout_row="2"
         android:layout_column="1"
         android:cursorVisible="false"
-        android:editable="false" />
+        android:editable="false"
+        android:layout_marginBottom="6dp" />
     
 	<TextView
         android:id="@+id/endtime"
@@ -60,7 +78,9 @@
         android:layout_height="wrap_content"
         android:layout_row="3"
         android:layout_column="0"
-        android:text="@string/endtime" />
+        android:textSize="16sp"
+        android:text="@string/endtime"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/endtimeDisplay"
@@ -69,7 +89,8 @@
         android:layout_row="3"
         android:layout_column="1"
         android:cursorVisible="false"
-        android:editable="false" />
+        android:editable="false"
+        android:layout_marginBottom="6dp" />
 
     <TextView
         android:id="@+id/classroomtype"
@@ -77,15 +98,19 @@
         android:layout_height="wrap_content"
         android:layout_row="4"
         android:layout_column="0"
-        android:text="@string/classroomtype" />
+        android:textSize="16sp"
+        android:text="@string/classroomtype"
+        android:layout_marginBottom="6dp" />
 
     <Button
         android:id="@+id/classroomtypebtn"
-        android:layout_width="210dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="1"
+        android:layout_gravity="fill_horizontal"
         android:layout_row="4"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_marginBottom="6dp" />
 
     <TextView
         android:id="@+id/classroomnoofpeople"
@@ -93,15 +118,19 @@
         android:layout_height="wrap_content"
         android:layout_row="5"
         android:layout_column="0"
-        android:text="@string/classroomnoofpeople" />
+        android:textSize="16sp"
+        android:text="@string/classroomnoofpeople"
+        android:layout_marginBottom="6dp" />
     
 	<Button
 	    android:id="@+id/classroomnoofpeoplebtn"
-	    android:layout_width="210dp"
+	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_column="1"
+	    android:layout_gravity="fill_horizontal"
 	    android:layout_row="5"
-	    android:textSize="14sp" />
+	    android:textSize="14sp"
+	    android:layout_marginBottom="6dp" />
 	
 	<TextView
         android:id="@+id/classroomno"
@@ -109,16 +138,20 @@
         android:layout_height="wrap_content"
         android:layout_row="6"
         android:layout_column="0"
-        android:text="@string/classroomno" />
+        android:textSize="16sp"
+        android:text="@string/classroomno"
+        android:layout_marginBottom="6dp" />
 
     
     <Button
 		android:id="@+id/classroomnobtn"
 		android:layout_height="wrap_content"
-		android:layout_width="210dp"
+		android:layout_width="wrap_content"
+		android:layout_gravity="fill_horizontal"
 		android:layout_row="6"
         android:layout_column="1"
-		android:textSize="14sp"/>
+		android:textSize="14sp"
+		android:layout_marginBottom="6dp"/>
 
     <TextView
         android:id="@+id/classroomstatus"
@@ -126,37 +159,37 @@
         android:layout_height="wrap_content"
         android:layout_row="7"
         android:layout_column="0"
+        android:textSize="16sp"
         android:text="@string/classroomstatus" />
 
     <Spinner
         android:id="@+id/classroomstatusspinner"
-        android:layout_width="204dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:gravity="center_horizontal"
         android:layout_column="1"
         android:layout_row="7"
         android:prompt="@string/classroomstatustip" />
 
+</GridLayout>
+
     <Button
         android:id="@+id/searchbtn"
-        android:layout_width="320dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_columnSpan="2"
-        android:layout_row="8"
         android:layout_gravity="center"
+        android:layout_above="@+id/hissearchbtn"
         android:text="@string/search" >
 
     </Button>
 
     <Button
         android:id="@+id/hissearchbtn"
-        android:layout_width="320dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_columnSpan="2"
-        android:layout_row="9"
-        android:layout_gravity="center"
-        android:text="@string/hissearch" >
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/hissearch" />
 
-    </Button>
-    
-
-</GridLayout>
+</RelativeLayout>

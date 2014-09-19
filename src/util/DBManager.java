@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import utilInter.DBManagerInter;
+import utilInter.QuerySqlInter;
+import utilInter.dealWithTimeInter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,7 +19,7 @@ import domain.Result;
 import domain.Results;
 import domain.query;
 
-public class DBManager {
+public class DBManager implements DBManagerInter{
 	private StdDBHelper helper;
 	private SQLiteDatabase db;
 
@@ -30,9 +33,7 @@ public class DBManager {
 
 	public Map<String, ArrayList<String>> getfull(String field) {
 		String DATABASE_NAME = "classroom";
-		QuerySql sqlquery;
-
-		sqlquery = new QuerySql();
+		QuerySqlInter sqlquery = utilFactory.getQuerySql();
 		if (field.equals("NumRange"))
 			return sqlquery.sqlQuery("Select DISTINCT " + field + " from "
 					+ DATABASE_NAME + " ORDER BY num", helper);
@@ -43,7 +44,7 @@ public class DBManager {
 	public ArrayList<String> nametoid(ArrayList<String> arrayList) {
 		// TODO Auto-generated method stub
 		String DATABASE_NAME = "classroom";
-		QuerySql sqlquery = new QuerySql();
+		QuerySqlInter sqlquery = utilFactory.getQuerySql();
 		String str = " where (";
 		for (String name : arrayList) {
 			str += "ClassroomName =\"" + name + "\" OR ";
@@ -68,19 +69,19 @@ public class DBManager {
 		switch (field_type) {
 		case Cursor.FIELD_TYPE_STRING: {
 			result = c.getString(0);
-			Log.v("String", result);
+			//Log.v("log:String", result);
 			c.close();
 			return result;
 		}
 		case Cursor.FIELD_TYPE_NULL: {
 			result = "";
-			Log.v("null", result);
+			//Log.v("log:null", result);
 			c.close();
 			return result;
 		}
 		case Cursor.FIELD_TYPE_INTEGER: {
 			result = c.getInt(0) + "";
-			Log.v("Integer", result + "");
+			//Log.v("log:Integer", result + "");
 			c.close();
 			return result;
 		}
@@ -92,11 +93,11 @@ public class DBManager {
 
 	public Map<String, ArrayList<String>> getbythreelimit(
 			Map<String, ArrayList<String>> map) {
-		Log.v("checkAndSearch", "checkAndSearch");
+		Log.v("log:checkAndSearch", "search in local database");
 		String DATABASE_NAME = "classroom";
 		Map<String, ArrayList<String>> result = new LinkedHashMap<String, ArrayList<String>>();
 		Map<String, ArrayList<String>> temp = new LinkedHashMap<String, ArrayList<String>>();
-		QuerySql sqlquery = new QuerySql();
+		QuerySqlInter sqlquery = utilFactory.getQuerySql();
 		String str = " where ";
 		for (String field : map.keySet()) {
 			if (map.get(field).isEmpty()) {
@@ -131,7 +132,8 @@ public class DBManager {
 					+ TABLE_NAME + " ORDER BY bestOverlapFloat DESC, date";
 			String endDate = "99999999";
 			try {
-				endDate = (new dealWithTime()).dateIncrement(q.getStartDate(),
+				dealWithTimeInter dealWithTime = utilFactory.getDealWithTime();
+				endDate = dealWithTime.dateIncrement(q.getStartDate(),
 						q.getDuration());
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -142,7 +144,7 @@ public class DBManager {
 		} else {
 			sql = "SELECT room, date, bestOverlapFloat, bestAvailableStartTime, bestAvailableEndTime FROM "
 					+ "(Select room, date, bestOverlapFloat, bestAvailableStartTime, bestAvailableEndTime, MIN(recordStartTime) as minStartTime "
-					+ "from OrderRecord WHERE recordType = ? group by room) "
+					+ "from OrderRecord WHERE recordType = ? group by room, date) "
 					+ " ORDER BY date, minStartTime, bestOverlapFloat";
 			c = db.rawQuery(sql, new String[] { "占用" });
 		}
@@ -151,16 +153,16 @@ public class DBManager {
 			c.moveToFirst();
 			do {
 				Result r = new Result();
-				// Log.v("room", c.getString(0).toString());
+				// Log.v("log:room", c.getString(0).toString());
 				r.setRoom(c.getString(0).toString());
-				// Log.v("date", (c.getString(1).toString()));
+				// Log.v("log:date", (c.getString(1).toString()));
 				r.setDate(c.getString(1).toString());
-				// Log.v("bestoverlap", c.getFloat(2) + "");
+				// Log.v("log:bestoverlap", c.getFloat(2) + "");
 				r.setBestOverlap(c.getFloat(2));
-				// Log.v("setBestAvailableStartTime",
+				// Log.v("log:setBestAvailableStartTime",
 				// c.getString(3).toString());
 				r.setBestAvailableStartTime(c.getString(3).toString());
-				// Log.v("setBestAvailableEndTime", c.getString(4).toString());
+				// Log.v("log:setBestAvailableEndTime", c.getString(4).toString());
 				r.setBestAvailableEndTime(c.getString(4).toString());
 				r.set_id(index);
 				index++;
@@ -207,7 +209,7 @@ public class DBManager {
 		// + " ORDER BY recordStartTime";
 		Cursor c2 = db.rawQuery(sql, new String[] { roomID, Date, "占用" });
 
-		Log.v("roomID", roomID + "  " + c2.getCount());
+		//Log.v("log:roomID", roomID + "  " + c2.getCount());
 		if (c2.getCount() > 0) {
 			int index = 1;
 			c2.moveToFirst();
@@ -216,7 +218,7 @@ public class DBManager {
 				r.setStartTime(c2.getString(0).toString());
 				r.setEndTime(c2.getString(1).toString());
 				r.setPersonName(c2.getString(2).toString());
-				Log.v("personName", c2.getString(2).toString());
+				//Log.v("log:personName", c2.getString(2).toString());
 				r.setDepartment(c2.getString(3).toString());
 				r.setContent(c2.getString(4).toString());
 				r.setStatus(c2.getString(5).toString());

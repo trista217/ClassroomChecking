@@ -67,7 +67,7 @@ public class Result implements Parcelable{
 	public void setBestOverlap(float bestOverlap) {
 		int hour = (int) Math.floor(bestOverlap);
 		int min = Math.round((bestOverlap - hour) * 60);
-		this.bestOverlap = hour + "小时" + min + "分";
+		this.bestOverlap = hour + "小时 " + min + "分";
 	}
 	
 	public void setBestOverlap(String bestOverlap) {

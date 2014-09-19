@@ -6,9 +6,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import service_impl.checkAndSearch;
-import util.DBManager;
+import service.checkAndSearch;
+import util.daoFactory;
 import util.dealWithTime;
+import util.utilFactory;
+import utilInter.DBManagerInter;
+import utilInter.dealWithTimeInter;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -30,9 +33,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import dao.HttpHelper;
 import dao.HttpTask;
 import dao.generateQueryUrl;
+import daoInter.generateQueryUrlInter;
 import domain.DataPerQuery;
 import domain.QueryAndUrlsForAsync;
 import domain.query;
@@ -89,19 +92,19 @@ public class MainActivity extends Activity {
 	private boolean classroomstatus = true; // true代表空闲
 
 	//数据库
-	private DBManager dbManager;
+	private DBManagerInter dbManager;
 
 	//加载中
-	HkDialogLoading dialogLoading;
+//	HkDialogLoading dialogLoading;
 	
 	//Time Operator
-	dealWithTime d = new dealWithTime();
+	dealWithTimeInter d = utilFactory.getDealWithTime();
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		Log.v("START", "********!!!!!!!!!****$$$$$$$$$$$$@@@@@@@@");
+		Log.v("log:Create MainActivity", "Create MainActivity");
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -109,9 +112,8 @@ public class MainActivity extends Activity {
 		//设置结果页
 		Results.setDataPerQueries(new ArrayList<DataPerQuery>());
 
-		dbManager = new DBManager(this);
+		dbManager = utilFactory.getDbManager(this);
 		//将dbMgr传入HttpHelper及HttpTask
-		HttpHelper.setDbMgr(dbManager);
 		HttpTask.setDbMgr(dbManager);
 
 		//清理数据库
@@ -130,10 +132,6 @@ public class MainActivity extends Activity {
 		all_classroomtypelist = dbManager.getfull("type").get("type");
 		checked_classroomtypelist = dbManager.getfull("type").get("type");
 		
-		
-		
-		dialogLoading = new HkDialogLoading(MainActivity.this);
-
 		startdate = (EditText) findViewById(R.id.startdateDisplay);
 		enddate = (EditText) findViewById(R.id.enddateDisplay);
 		starttime = (EditText) findViewById(R.id.starttimeDisplay);
@@ -147,6 +145,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// 调用Activity类的方法来显示Dialog:调用这个方法会允许Activity管理该Dialog的生命周期，
 				// 并会调用 onCreateDialog(int)回调函数来请求一个Dialog
+				Log.v("log:User want to change start date", "change start date");
 				showDialog(START_DATE_DIALOG_ID);
 			}
 		});
@@ -157,6 +156,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// 调用Activity类的方法来显示Dialog:调用这个方法会允许Activity管理该Dialog的生命周期，
 				// 并会调用 onCreateDialog(int)回调函数来请求一个Dialog
+				Log.v("log:User want to change end date", "change end date");
 				showDialog(END_DATE_DIALOG_ID);
 			}
 		});
@@ -167,6 +167,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// 调用Activity类的方法来显示Dialog:调用这个方法会允许Activity管理该Dialog的生命周期，
 				// 并会调用 onCreateDialog(int)回调函数来请求一个Dialog
+				Log.v("log:User want to change start time", "change start time");
 				showDialog(START_TIME_DIALOG_ID);
 			}
 		});
@@ -177,6 +178,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// 调用Activity类的方法来显示Dialog:调用这个方法会允许Activity管理该Dialog的生命周期，
 				// 并会调用 onCreateDialog(int)回调函数来请求一个Dialog
+				Log.v("log:User want to change end time", "change end time");
 				showDialog(END_TIME_DIALOG_ID);
 			}
 		});
@@ -203,6 +205,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				Log.v("log:User want to change classroom parameter", "change classroom parametere");
 				Intent classroomNoSelectionIntent = new Intent(MainActivity.this, MultiSpinnerActivity.class);
 				Bundle classroomNoBundle = new Bundle();
 				classroomNoBundle.putInt("flag", CLS_NO_FLAG);
@@ -222,6 +225,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				Log.v("log:User want to change peopleNumber of classroom", "peopleNumber of classroom");
 				Intent classroomNoOfPeopleSelectionIntent = new Intent(MainActivity.this, MultiSpinnerActivity.class);
 				Bundle classroomNoOfPeopleBundle = new Bundle();
 				classroomNoOfPeopleBundle.putInt("flag", CLS_NO_OF_P_FLAG);
@@ -241,6 +245,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				Log.v("log:User want to change type of classroom", "type of classroom");
 				Intent classroomTypeSelectionIntent = new Intent(MainActivity.this, MultiSpinnerActivity.class);
 				Bundle classroomTypeBundle = new Bundle();
 				classroomTypeBundle.putInt("flag", CLS_TYPE_FLAG);
@@ -255,13 +260,13 @@ public class MainActivity extends Activity {
 		// 创建选择教室状态的Spinner
 		classroomstatusspinner = (Spinner) findViewById(R.id.classroomstatusspinner);
 		classroomstatusadapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, classroomstatusarray);
-		classroomstatusadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		classroomstatusadapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
 		classroomstatusspinner.setAdapter(classroomstatusadapter);
 		classroomstatusspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				classroomstatus = (position == 1)?false:true;
-				Log.v("test", ""+classroomstatus);
+				Log.v("log:Whether user wants to search classroom avaliable?", ""+classroomstatus);
 			}
 
 			@Override
@@ -275,6 +280,7 @@ public class MainActivity extends Activity {
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				Log.v("log:User begin to search", "begin to search");
 				//给后台传值
 				Map<String,ArrayList<String>> search = new HashMap<String,ArrayList<String>>();
 				search.put("ClassroomName", checked_classroomnolist);
@@ -286,9 +292,10 @@ public class MainActivity extends Activity {
 				String startDate_String = Integer.toString(startYear) + ((startMonth+1)>=10?"":"0") + Integer.toString(startMonth+1) + (startDay>=10?"":"0") + Integer.toString(startDay);
 				String endDate_String = Integer.toString(endYear) + ((endMonth+1)>=10?"":"0") + Integer.toString(endMonth+1) + (endDay>=10?"":"0") + Integer.toString(endDay);
 				int duration_int;
+				Log.v("log:Check whether search parameter is legal", "begin to check");
 				try {
 					duration_int = d.calDateDuration(startDate_String, endDate_String);
-					Log.v("duration", duration_int + "");
+					//Log.v("log:duration", duration_int + "");
 				} catch(Exception e) {
 					e.printStackTrace();
 					Toast.makeText(getApplicationContext(), "日期格式有误", Toast.LENGTH_SHORT).show();
@@ -305,22 +312,26 @@ public class MainActivity extends Activity {
 					Toast.makeText(getApplicationContext(), "开始时间应早于结束时间", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				if(duration_int>7) { 
+				if(duration_int<1) {
+					Toast.makeText(getApplicationContext(), "开始日期应不晚于结束日期", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(duration_int>5) { 
 					Toast.makeText(getApplicationContext(), "查询日期过长", Toast.LENGTH_SHORT).show();
 					return;
 				}
 
-				//加载中
-				MainActivity.this.dialogLoading.show();
-
 				query userQuery = new query(startDate_String, duration_int, startTime_String, endTime_String, roomId, type, number, isAvaliable);
-
+				
+				Log.v("log:put all parameter into class query","parameter into query");
 				// 测试是否连接到网络,testNetworkConn()需要放进MainActivity里面
+				
 				try {
 					testNetworkConn(userQuery);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
+				Log.v("log:Check search parameter finished", "all legal");
 			}
 		});
 
@@ -329,6 +340,7 @@ public class MainActivity extends Activity {
 		historical_search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				Log.v("log:User want to check history record", "history record");
 				//给Results传tab
 				Intent searchToResult = new Intent(MainActivity.this, Results.class);
 				Bundle toPresent = new Bundle();
@@ -341,8 +353,9 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onResume() {
+
 		super.onResume();
-		dialogLoading.hide();
+//		dialogLoading.hide();
 	}
 
 	private static String pad(int c) {
@@ -361,6 +374,7 @@ public class MainActivity extends Activity {
 			startMonth = monthOfYear;
 			startDay = dayOfMonth;
 			startdate.setText(new StringBuilder().append(startYear).append("年").append(startMonth + 1).append("月").append(startDay).append("日"));
+			Log.v("log:set start date","set start date");
 		}
 	};
 	private DatePickerDialog.OnDateSetListener endDateSetListener = new OnDateSetListener() {
@@ -370,9 +384,8 @@ public class MainActivity extends Activity {
 			endMonth = monthOfYear;
 			endDay = dayOfMonth;
 			// 设置文本的内容：
-			enddate.setText(new StringBuilder().append(endYear).append("年")
-					.append(endMonth + 1).append("月")// 得到的月份+1，因为从0开始
-					.append(endDay).append("日"));
+			enddate.setText(new StringBuilder().append(endYear).append("年").append(endMonth + 1).append("月").append(endDay).append("日"));
+			Log.v("log:set end date","set end date"); 
 		}
 	};
 
@@ -406,6 +419,7 @@ public class MainActivity extends Activity {
 			startMin = minute;
 			starttime.setText(new StringBuilder().append(pad(startHour))
 					.append(":").append(pad(startMin)));
+			Log.v("log:set start time","set start time");
 		}
 	};
 	private TimePickerDialog.OnTimeSetListener endTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -416,6 +430,7 @@ public class MainActivity extends Activity {
 			endMin = minute;
 			endtime.setText(new StringBuilder().append(pad(endHour))
 					.append(":").append(pad(endMin)));
+			Log.v("log:set end time","set end time");
 		}
 	};
 
@@ -459,6 +474,8 @@ public class MainActivity extends Activity {
 		Map<String, ArrayList<String>> result_NOP = (new checkAndSearch()).checkMap(for_NOP,dbManager);
 		Map<String, ArrayList<String>> result_Type = (new checkAndSearch()).checkMap(for_Type,dbManager);
 		
+		Log.v("log:automatically change classroom, NumRange and type according to database","automatically update");
+		
 		//根据返回的3个包更新3个要显示的list
 		classroomnolist = new ArrayList<String>(result_NO.get("ClassroomName"));
 		classroomnoofpeoplelist = new ArrayList<String>(result_NOP.get("NumRange"));
@@ -467,18 +484,22 @@ public class MainActivity extends Activity {
 
 	//
 	private void testNetworkConn(query userQuery) throws ParseException {
+		Log.v("log:DAO","Check network connection.");
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) {
 			// generate query urls
-			Map<String,ArrayList<String>> queryUrlList = new generateQueryUrl().genQueryUrl(userQuery);
+			Log.v("log:DAO","Network connection succeeds.");
+			generateQueryUrlInter generateQueryUrl = daoFactory.getgenerateQueryUrl();
+			Map<String,ArrayList<String>> queryUrlList = generateQueryUrl.genQueryUrl(userQuery);
 			QueryAndUrlsForAsync queryAndUrls = new QueryAndUrlsForAsync(userQuery, queryUrlList);
-			Log.d("httptask", "start http task");
+			Log.v("log:DAO", "Start asynchronous call HttpTask:begin to post request to server");
 			//使用HttpTask
 			HttpTask httptask = new HttpTask(MainActivity.this,userQuery);
 			httptask.execute(queryAndUrls);
 		} else {
-			Toast.makeText(getApplicationContext(), "No network connection!",
+			Log.v("log:DAO","No network connection!");
+			Toast.makeText(getApplicationContext(), "没有网络连接！",
 					Toast.LENGTH_LONG).show();
 		}
 	}

@@ -9,15 +9,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import util.DBManager;
 import util.dealWithTime;
 import util.dealWithUrl;
+import util.utilFactory;
+import utilInter.DBManagerInter;
+import utilInter.dealWithUrlInter;
 import domain.RecordForDao;
 import domain.query;
 
 public class HttpHelper_parse implements Runnable {
 
-	private static DBManager dbMgr;
+	private static DBManagerInter dbMgr;
 	private query userQuery;
 	private ArrayList<String> queryUrlList;
 	private static int flag = 0;
@@ -41,7 +43,8 @@ public class HttpHelper_parse implements Runnable {
 			for (String queryUrl : queryUrlList) {
 
 				ArrayList<RecordForDao> recordsList = new ArrayList<RecordForDao>();
-				String recordRoomId = new dealWithUrl().getRmId(queryUrl);
+				dealWithUrlInter dealWithUrl = utilFactory.getDealWithUrl();
+				String recordRoomId = dealWithUrl.getRmId(queryUrl);
 				String recordDate = new dealWithUrl().getDate(queryUrl);
 				String bestAvailableStartTime = "0000";
 				String bestAvailableEndTime = "0000";
@@ -166,7 +169,7 @@ public class HttpHelper_parse implements Runnable {
 		HttpHelper_parse.flag = flag;
 	}
 
-	public static void setDbMgr(DBManager dbMgr) {
+	public static void setDbMgr(DBManagerInter dbMgr) {
 		HttpHelper_parse.dbMgr = dbMgr;
 	}
 }

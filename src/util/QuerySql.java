@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import utilInter.QuerySqlInter;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-public class QuerySql {
+public class QuerySql implements QuerySqlInter{
 	private SQLiteDatabase db;
 
 	public Map<String, ArrayList<String>> sqlQuery(String sql,StdDBHelper dbHelper) {
@@ -17,12 +18,12 @@ public class QuerySql {
 		String[] colNames;
 		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 
-		Log.v("sqlQuery","sqlQuery");
+		//Log.v("log:sqlQuery","sqlQuery");
     	db=dbHelper.getWritableDatabase();
-		Log.v("before sql query", "*************");
+		//Log.v("log:before sql query", "*************");
 		Cursor c=db.rawQuery(sql, null);
 		colNames=c.getColumnNames();
-		Log.v("after sql", colNames.toString());
+		//Log.v("log:after sql", colNames.toString());
 		for(int i=0;i<colNames.length;i++)
 		{
 			c.moveToFirst();
@@ -34,7 +35,7 @@ public class QuerySql {
 			}
 			map.put(colNames[i], fieldsValue);
 		}
-		Log.v("sql query finished", "finished");
+		//Log.v("log:sql query finished", "finished");
 		return map;
     }
 }
